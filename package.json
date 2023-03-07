@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "type": "module",
     "dependency-injection-es6": "^1.2.1",

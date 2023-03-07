@@ -31,6 +31,7 @@ function createCard(id) {
     var card = document.createElement('div');
     card.onclick = function() {displayCard(card);}
     card.className = 'card';
+    var cards = new Card(1, 'Gypopo', "Cool looking gui layout's", '4am', '#op, #skyblock #survival #basic #cheap #modern #oldSchool french, everyItem', '5.2.4', '1.19, 1.18');
     
     return card;
 }
