@@ -1,10 +1,25 @@
-module.exports = async function call() {
-    const response = await fetch('https://node1.gpplugins.com:2083/api/guild/member/416924727224041473', {
-        method: 'GET',
-    });
-    //const myJson = await response.json();
-    const text = await response.text();
+var Card = require('./objects/Card.js');
 
-    //console.log(myJson);
-    return text;
+module.exports = class API {
+
+    /**
+    * @returns {Promise<Map<string, Card>>}.
+    */
+    async loadCards() {
+        const response = await fetch('http://192.168.55.170:3333/api/getFiles', {
+            method: 'GET',
+        });
+
+        var raw = await response.text();
+        var values = new Map(JSON.parse(raw));
+
+        var cards = new Map();
+        for (var [key, value] of new Map(JSON.parse(raw))) {
+            cards.set(key, new Card(JSON.parse(JSON.stringify(value))));
+        }
+        console.log(cards);
+
+        return cards;
+    }
+
 }

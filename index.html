@@ -34,7 +34,7 @@
             white-space: nowrap;
         }
 
-        .version {
+        .mc-versions {
             width: 95%;
             padding-top: 2.5%;
             overflow: hidden;
@@ -53,9 +53,7 @@
 
         .description {
             width: 95%;
-            height: 45%;
-            margin-top: 5%;
-            margin-left: 5%;
+            padding-top: 2.5%;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -121,6 +119,20 @@
             margin-top: 10%;
         }
 
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body style="background-color:#252525">
@@ -145,11 +157,12 @@
                 <b>Author: </b>
                 Gypopos big ass
             </div>
-            <div class="version">
+            <div class="mc-versions">
                 <b>Compatible versions: </b>
                 1.19, 1.18, 1.17
             </div>
             <div class="description">
+                <b>Description: </b>
                 A 1.19 shop layout for EconomyShopGUI, pretty hardcore but still doable
             </div>
             <div class="tags">
