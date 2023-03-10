@@ -90,7 +90,7 @@
             position: relative;
         }
 
-        .cards {
+        .page {
             padding-top: 2.5%;
             padding-left: 2.5%;
             display: grid;
@@ -120,12 +120,15 @@
         }
 
         .loader {
-            border: 16px solid #f3f3f3; /* Light grey */
-            border-top: 16px solid #3498db; /* Blue */
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
             border-radius: 50%;
-            width: 120px;
-            height: 120px;
+            width: 50px;
+            height: 50px;
             animation: spin 2s linear infinite;
+            margin-right: auto;
+            margin-left: auto;
+            position: relative;
         }
 
         @keyframes spin {
@@ -138,7 +141,12 @@
 <body style="background-color:#252525">
     <h2 style="color: white;">Card</h2>
 
-    <div class="cards" id="cards">
+    <div class="loader-frame" id="loader-frame">
+    <div class="loader" id="loader"></div>
+    </div>
+
+    <div class="pages" id="pages">
+    <div class="page" id="page1">
     <div class="card" id="card" title="Click to show">
         <div class="icon-frame">
             <div class="icon">
@@ -170,6 +178,7 @@
 
             </div>
         </div>
+    </div>
     </div>
     </div>
     <script type="module" src="bundle.js">
