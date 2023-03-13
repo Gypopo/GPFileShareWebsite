@@ -2,13 +2,15 @@ const SearchResults = require("./SearchResults");
 
 module.exports = class Cards {
 
+    pageSize;
     cards;
-    
+
     /**
      * @param {Map<string, Card>} cards
      */
-    constructor(cards) {
+    init(cards) {
         this.cards = cards;
+        this.pageSize = 5;
     }
 
     /**
@@ -27,11 +29,15 @@ module.exports = class Cards {
     }
 
     /**
-     * @param {number} i
+     * @param {number} p
      * @param {SearchResults} filter
+     * @return {Map<string, Card>}
      */
-    get(i, filter) {
-        var all = this.cards.size / 30;
-        var p = all * i;
+    getPage(p, filter) {
+        var cards = new Map();
+        var i = p*this.pageSize-this.pageSize;
+        while (e < cards.size && e < 30) {
+            var card = cards.get(e);
+        }
     }
 }

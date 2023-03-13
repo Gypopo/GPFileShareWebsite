@@ -1,53 +1,89 @@
 //var query = require('./database/MySQL.js');
 var API = require('./api.js');
-var cardList = document.getElementById('cards');
+var pages = document.getElementById('pages');
 var Card = require('./objects/Card.js');
 var SearchResults = require('./objects/SearchResults.js');
 var Cards = require('./objects/Cards.js');
 
     //console.log(apiCall());
-var cards = new Cards();
+var cards = new Cards;
 var api = new API();
 
 init();
 
-function init() {
+async function init() {
     setLoading();
-    api.loadCards().then(v => {
-        cards = v
+    try {
+        await api.loadCards().then(v => {
+            cards.init(v);
+            completeLoading();
+        });
+    } catch(e) {
+        if (e.name === 'AbortError') {
+            alert('A timeout exception occured while trying to reach the backend server, please report this issue to: https://discord.com/invite/nPyuB4F');
+        } else {
+            alert('It looks like there was an error while trying to load this page, please report this to our discord at: https://discord.com/invite/nPyuB4F');
+        }
+        console.log(e);
+    }
+}
+
+/**
+ * @param {Number} i
+ * @returns {HTMLElement}
+ */
+function createPage(i) {
+    var page = document.createElement('div');
+    page.className = 'page';
+    page.id = 'page' + i;
+
+    cards.getPage(i, null).forEach(card => {
+        var card = cards.get(e);
+        page.appendChild(createCard(card));
+
     });
+
+    return page;
 }
 
-
-
-function appendCard(card) {
-    cardList.appendChild(card);
+function appendCard(i, card) {
+    var page = document.getElementById('page' + i);
+    page.appendChild(card);
 }
 
-function removeCard(card) {
-    cardList.removeChild(card);
+function removeCard(i, card) {
+    var page = document.getElementById('page' + i);
+    page.removeChild(card);
 }
 
 var loading = false;
 
 function setLoading() {
+    var loaderFrame = document.createElement('div');
+    loaderFrame.className = 'loader-frame';
+    loaderFrame.id = 'loader';
+
     var loader = document.createElement('div');
     loader.className = 'loader';
-    loader.id = 'loader';
 
-    document.body.appendChild(loader);
+    loaderFrame.appendChild(loader);
+    document.body.appendChild(loaderFrame);
     loading = true;
 }
 
 /**
  * 
- * @param {Map<string, Card>} card 
+ * @param {Map<string, Card>} cards
  */
-function completeLoading(cards) {
-    if (loading) {
-        var loader = document.body.getElementById('loader')
+function completeLoading() {
+    var page = createPage(1);
+
+    
+        var loader = document.getElementById('loader')
         document.body.removeChild(loader);
-    }
+    
+
+    pages.appendChild(page);
 }
 
 /**
@@ -118,12 +154,3 @@ function closeListener(e) {
         document.body.removeChild(overlay);
     }
 }
-
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());
-appendCard(createCard());

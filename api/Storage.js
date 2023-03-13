@@ -5,11 +5,13 @@ import {v4 as uuidv4} from 'uuid';
 
 export class Storage {
     constructor() {
-        this.map = new Map(JSON.parse(this.getRaw()));
+        this.cards = new Array(JSON.parse(this.getRaw()));
+        //this.map = new Map(JSON.parse(this.getRaw()));
     }
 
     append() {
             var card = new Card(
+                uuidv4(),
                 'Gypopo',
                 'A default shop layout',
                 Date.now(),
@@ -17,7 +19,8 @@ export class Storage {
                 '5.2.4',
                 '1.19');
 
-            this.map.set(uuidv4(), card);
+        cards.append(card);
+
 
         this.write();
     }
@@ -25,7 +28,8 @@ export class Storage {
     write() {
         var stream = fs.createWriteStream("cards.json");
 
-        stream.write(JSON.stringify(Array.from(this.map.entries()), null, 2));
+        stream.write(JSON.stringify(cards, null, 2));
+        //stream.write(JSON.stringify(Array.from(this.map.entries()), null, 2));
         stream.close();
 
         /*

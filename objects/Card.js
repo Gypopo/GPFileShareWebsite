@@ -1,5 +1,6 @@
 module.exports = class Card {
-    constructor(author, description, createDate, tags, pluginVersion, mcVersion) {
+    constructor(id, author, description, createDate, tags, pluginVersion, mcVersion) {
+        this.id = id;
         this.author = author;
         this.desc = description;
         this.creation = createDate;
