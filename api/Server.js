@@ -23,7 +23,7 @@ var server = http.createServer((request, response) => {
             storage.append();
             break;
         case '/api/createCard':
-            createCard(request, response)
+            createCard(request, response);
             break;
         default:
             response.write(request.url);

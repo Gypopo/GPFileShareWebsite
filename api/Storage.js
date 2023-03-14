@@ -19,7 +19,7 @@ export class Storage {
                 '5.2.4',
                 '1.19');
 
-        cards.append(card);
+        this.cards.push(card);
 
 
         this.write();
@@ -28,7 +28,7 @@ export class Storage {
     write() {
         var stream = fs.createWriteStream("cards.json");
 
-        stream.write(JSON.stringify(cards, null, 2));
+        stream.write(JSON.stringify(this.cards, null, 2));
         //stream.write(JSON.stringify(Array.from(this.map.entries()), null, 2));
         stream.close();
 
@@ -38,6 +38,14 @@ export class Storage {
             console.log('complete');
         });
         */
+    }
+
+    /**
+     * @param {string} uuid
+    * @returns {Boolean}
+    */
+    exists(uuid) {
+        return this.cards.some(x => x);
     }
 
     /**
