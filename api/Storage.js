@@ -12,7 +12,7 @@ export class Storage {
     append() {
             var card = new Card(
                 uuidv4(),
-                'Gypopo',
+                'discord:Gypopo,416924727224041473',
                 'A default shop layout',
                 Date.now(),
                 '#skyblock #survival, modern',

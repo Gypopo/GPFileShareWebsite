@@ -1,9 +1,10 @@
 //var query = require('./database/MySQL.js');
-var API = require('./api.js');
+import {API} from './api.js';
 var pages = document.getElementById('pages');
-var Card = require('./objects/Card.js');
-var SearchResults = require('./objects/SearchResults.js');
-var Cards = require('./objects/Cards.js');
+import {Card} from './objects/Card.js';
+//import SearchResults from './objects/SearchResults.js';
+import {Cards} from './objects/Cards.js';
+import {Author} from './objects/Author.js';
 
     //console.log(apiCall());
 var cards = new Cards;
@@ -16,6 +17,7 @@ async function init() {
     try {
         await api.loadCards().then(v => {
             cards.init(v);
+            //console.log(v)
             completeLoading();
         });
     } catch(e) {
@@ -37,10 +39,10 @@ function createPage(i) {
     page.className = 'page';
     page.id = 'page' + i;
 
-    cards.getPage(i, null).forEach(card => {
-        var card = cards.get(e);
-        page.appendChild(createCard(card));
-
+    cards.getPage(i, null).forEach((card, id) => {
+        //console.log(id);
+        //console.log(id);
+        page.appendChild(createCard(id, card));
     });
 
     return page;
@@ -71,10 +73,6 @@ function setLoading() {
     loading = true;
 }
 
-/**
- * 
- * @param {Map<string, Card>} cards
- */
 function completeLoading() {
     var page = createPage(1);
 
@@ -87,15 +85,21 @@ function completeLoading() {
 }
 
 /**
- * 
+ * @param {string} id
  * @param {Card} card 
  */
-function createCard(card) {
+function createCard(id, card) {
     var div = document.createElement('div');
-    div.onclick = function() {displayCard(div);}
+    div.onclick = function() {displayCard(div, card);}
     div.className = 'card';
+    div.id = id;
     div.title = 'Click to show more info';
+    if (card.isPremium()) {
+        tagPremium(div);
+    }
     setIcon(div);
+    addSeperator(div);
+    addContainer(div, card);
 
     //var cards = new Card(1, 'Gypopo', "Cool looking gui layout's", '4am', '#op, #skyblock #survival #basic #cheap #modern #oldSchool french, everyItem', '5.2.4', '1.19, 1.18');
     
@@ -103,7 +107,6 @@ function createCard(card) {
 }
 
 /**
- * 
  * @param {HTMLDivElement} div 
  */
 function setIcon(div) {
@@ -123,6 +126,94 @@ function setIcon(div) {
     div.appendChild(iconFrame);
 }
 
+/**
+ * @param {HTMLDivElement} div 
+ */
+function tagPremium(div) {
+    var tag = document.createElement('div');
+    tag.className = 'premium';
+    tag.innerHTML = 'Premium';
+
+    div.appendChild(tag);
+}
+
+/**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
+function addContainer(div, card) {
+    var container = document.createElement('div');
+    container.className = 'container';
+
+    appendMCVersions(container, card);
+    appendAuthor(container, card);
+    appendTags(container, card);
+    
+    div.appendChild(container);
+}
+
+/**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
+function appendMCVersions(div, card) {
+    var versions = document.createElement('div');
+    versions.className = 'versions';
+    versions.innerHTML = '<b>MC Versions: </b>' + card.getMinecraftVersion();
+
+    div.appendChild(versions);
+}
+
+/**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
+function appendAuthor(div, card) {
+    var author = document.createElement('div');
+    author.className = 'author';
+    author.innerHTML = '<b>Author: </b>' + card.getAuthor().getAuthor();
+
+    div.appendChild(author);
+}
+
+/**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
+function appendTags(div, card) {
+    var tags = document.createElement('div');
+    tags.className = 'tags';
+    tags.innerHTML = '<b>Tags: </b>'
+
+    var tagDiv = document.createElement('div');
+    tagDiv.className = 'tags tag';
+
+    var tag = '';
+    for(var i of card.getTags()) {
+       tag = tag + '#' + i + ' ';
+    }
+    tagDiv.innerHTML = tag;
+
+    tags.appendChild(tagDiv);
+    div.appendChild(tags);
+}
+
+/**
+ * @param {HTMLDivElement} div 
+ */
+function addSeperator(div) {
+    var seperator = document.createElement('div');
+    seperator.className = 'seperator';
+    
+    var line = document.createElement('hr');
+    line.size = 2;
+    line.width = '75%';
+    line.color = 'black';
+
+    seperator.appendChild(line);
+    div.appendChild(seperator);
+}
+
 function loadCard(uuid, author, mcVersion, plVersion, ) {
     var card = document.createElement('div');
     card.onclick = function() {displayCard(card);}
@@ -132,7 +223,7 @@ function loadCard(uuid, author, mcVersion, plVersion, ) {
     return card;
 }
 
-function displayCard(card) {
+function displayCard(div, card) {
     var overlay = document.createElement('div');
     overlay.className = 'overlay';
     overlay.id = 'overlay';

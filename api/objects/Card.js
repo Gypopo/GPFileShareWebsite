@@ -1,4 +1,5 @@
 import {Tags} from './Tags.js';
+import {Author} from './author/Author.js';
 
 export class Card {
     /**
@@ -11,10 +12,10 @@ export class Card {
     */
     constructor(id, author, description, createDate, tags, pluginVersion, mcVersion) {
         this.id = id;
-        this.author = author;
+        this.author = new Author(author);
         this.desc = description;
         this.creation = createDate;
-        this.tags = new Tags(tags).tags;
+        this.tags = tags;
         this.plVer = pluginVersion;
         this.mcVer = mcVersion;
     }
