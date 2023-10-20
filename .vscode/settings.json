@@ -1,3 +1,6 @@
 {
-    "emeraldwalk.runonsave": {}
+    "emeraldwalk.runonsave": {
+    
+    },
+    "liveServer.settings.port": 5500
 }

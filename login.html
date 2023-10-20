@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caprasimo|Kanit:wght@300&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600&display=swap">
+    <link rel="stylesheet" href="css/nav.css">
+    <title>Login to view your layouts</title>
+    <style>
+        .login-form {
+            width: 700px;
+            height: 460px;
+            border-radius: 5px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .login-form::before {
+            content: "";
+            position: absolute;
+            left: 12.5%;
+            bottom: 0;
+            width: 75%;
+            /* or 100px #7f7f7f*/
+            border-bottom: 4px solid;
+            box-shadow: 0px 15px 8px 0px #7f7f7f;
+            z-index: 0;
+        }
+
+        .form-left {
+            position: relative;
+            border-radius: 5px;
+            background-color: #dadada;
+            height: inherit;
+            width: inherit;
+        }
+
+        .left-content {
+            position: relative;
+            padding-left: 5%;
+            padding-top: 5%;
+            padding-bottom: 5%;
+            width: 210px;
+            height: inherit;
+            color: black;
+            font-size: larger;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .login-img {
+            position: relative;
+            margin: 15%;
+            height: 40%;
+            width: 67%;
+            border-radius: 100%;
+        }
+
+        .form-right {
+            position: absolute;
+            box-sizing: content-box;
+            border-radius: 5px;
+            background-color: #dadada;
+            right: 0;
+            top: 0;
+            height: inherit;
+            width: 70%;
+            box-sizing: border-box;
+        }
+
+        .login-text {
+            color: black;
+            font-size: larger;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 270px;
+            padding-top: 25%;
+        }
+
+        .base {
+            background: rgb(94, 0, 97);
+            display: inline-block;
+            height: 460px;
+            position: relative;
+            width: 440px;
+            margin-left: 50px;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .corner-cut1 {
+            position: absolute;
+            z-index: 999;
+            color: #dadada;
+            border: 7.5px solid;
+            top: 0%;
+            left: 35.5%;
+        }
+
+        .corner1 {
+            position: absolute;
+            z-index: 999;
+            color: rgb(94, 0, 97);
+            border: 20px solid;
+            border-radius: 20px;
+            top: 0%;
+            left: 37.1%;
+        }
+
+        .corner-cut2 {
+            position: absolute;
+            z-index: 999;
+            color: #dadada;
+            border: 7.5px solid;
+            bottom: 0%;
+            left: 35.5%;
+        }
+
+        .corner2 {
+            position: absolute;
+            z-index: 999;
+            color: rgb(94, 0, 97);
+            border: 20px solid;
+            border-radius: 20px;
+            bottom: 0%;
+            left: 36.95%;
+        }
+
+        .base-before {
+            border-bottom: 50px solid rgb(94, 0, 97);
+            border-left: 230px solid transparent;
+            border-right: 230px solid transparent;
+            content: "";
+            height: 0;
+            left: 0;
+            position: absolute;
+            left: 1.15%;
+            top: 45%;
+            width: 0;
+            transform: rotate(270deg);
+            z-index: 998;
+        }
+
+        .right-content {
+            position: relative;
+            text-align: center;
+            width: 240px;
+            height: 260px;
+            margin: 100px;
+            color: white;
+        }
+
+        .remember-me {
+            position: absolute;
+            color: white;
+            bottom: 20px;
+            left: 10%;
+        }
+
+        .login-button {
+            position: absolute;
+            height: 40px;
+            width: 60%;
+            text-align: center;
+            bottom: 60px;
+            left: 20%;
+            color: white;
+            padding: 6.5px;
+            box-sizing: border-box;
+            background-color: #5c87d7;
+            font-size: larger;
+            border-radius: 10px;
+            font-family: 'Noto Serif', serif;
+        }
+
+        .login-button:hover {
+            box-shadow: 4px 8px 16px 4px rgba(157, 156, 156, 0.488);
+        }
+
+        .login-button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .login-button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .login-button:hover span {
+            padding-right: 25px;
+        }
+
+        .login-button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+    </style>
+</head>
+
+<!-- https://startbootstrap.com/snippets/navbar-logo-->
+<nav class="navbar navbar-expand-lg navbar-dark static-top" id="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="pics/Logo_GP5.0 no background.png" alt="..." height="64">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="index.html">Layouts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://discord.gpplugins.com">Discord</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">Spigot</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body style="background-color:#252525">
+    <div class="login-form" id="form">
+        <div class="form-left">
+            <div class="left-content" id="left-text">
+                <img src="pics/discord-icon.svg" class="login-img"></img>
+                <div style="font-size: xx-large;"><b>Sign In</b></div>
+                <div style="font-size: medium;"><br>Do not have a Discord account yet?<br>Create a Discord account <a
+                        href="https://discord.com/register" target="_blank"><b>here</b></a>.</div>
+            </div>
+        </div>
+        <div class="corner-cut1"></div>
+        <div class="corner1"></div>
+        <div class="base-before"></div>
+        <div class="form-right">
+            <div class="base">
+                <div class="right-content">
+                    <br>
+                    Welcome back!
+                    <br>
+                    <br>
+                    Sign in thru Discord to see your uploaded layouts.
+                    <div class="login-button" id="login-button">
+                        <span>Login</span>
+                    </div>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me" style="cursor: pointer;">
+                            <label for="remember-me" style="cursor: pointer;">Remember me for 14 days</label>
+                        </input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="corner-cut2"></div>
+        <div class="corner2"></div>
+    </div>
+    <script type="module" src="main2.js"></script>
+    <script type="text/javascript" src="nav.js"></script>
+    <!-- <script type="module" src="bundle.js"></script> -->
+    </div>
+</body>
+
+</html>

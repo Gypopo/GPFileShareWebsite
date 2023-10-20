@@ -6,15 +6,21 @@ export class Card {
     * @param {string} description
     * @param {number} createDate
     * @param {Array<string>} tags
+    * @param {Array<string>} files
+    * @param {number} views
+    * @param {number} downloads
     * @param {string} pluginVersion
     * @param {string} mcVersion
     * @param {boolean} prem
     */
-    constructor(author, description, createDate, tags, pluginVersion, mcVersion, prem) {
+    constructor(author, description, createDate, tags, views, downloads, files, pluginVersion, mcVersion, prem) {
         this.author = new Author(author);
         this.desc = description;
         this.creation = createDate;
         this.tags = tags;
+        this.views = views;
+        this.downloads = downloads;
+        this.files = files;
         this.plVer = pluginVersion;
         this.mcVer = mcVersion;
         this.prem = prem;
@@ -49,6 +55,27 @@ export class Card {
     }
 
     /**
+     * @returns {Array<string>}
+     */
+    getFiles() {
+        return this.files;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getViews() {
+        return this.views;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getDownloads() {
+        return this.downloads;
+    }
+
+    /**
      * @returns {string}
      */
     getPluginVersion() {
@@ -58,7 +85,7 @@ export class Card {
     /**
      * @returns {string}
      */
-    getMinecraftVersion() {
+    getMinecraftVersions() {
         return this.mcVer;
     }
 

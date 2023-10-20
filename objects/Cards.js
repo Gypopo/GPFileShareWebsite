@@ -23,6 +23,14 @@ export class Cards {
 
     /**
      * @param {string} id
+     * @return {Card}
+     */
+    get(id) {
+        return this.cards.get(id);
+    }
+
+    /**
+     * @param {string} id
      * @param {Card} card
      */
     add(id, card) {

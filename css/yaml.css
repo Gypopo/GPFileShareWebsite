@@ -1,0 +1,35 @@
+.token.comment {
+    color: #888;
+}
+
+.token.key {
+    color: rgb(69, 69, 255);
+}
+
+.token.string {
+    color: rgb(13, 164, 13);
+}
+
+.token.number {
+    color: rgb(162, 55, 55);
+}
+
+.token.boolean {
+    color: rgb(161, 0, 0);
+}
+
+.token.null {
+    color: rgb(255, 0, 221);
+}
+
+.token.list {
+    color: rgb(13, 164, 13);
+}
+
+.token.multiline-string .delimiter {
+    color: rgb(255, 0, 221);
+}
+
+.token.multiline-string .content {
+    color: rgb(13, 164, 13);
+}
