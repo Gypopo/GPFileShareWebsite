@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="css/nav.css">
     <title>Login to view your layouts</title>
     <style>
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0%;
+        }
+        
         .login-form {
             width: 700px;
             height: 460px;
@@ -69,7 +75,7 @@
             right: 0;
             top: 0;
             height: inherit;
-            width: 70%;
+            width: 65%;
             box-sizing: border-box;
         }
 
@@ -88,9 +94,7 @@
         .base {
             background: rgb(94, 0, 97);
             display: inline-block;
-            height: 460px;
             position: relative;
-            width: 440px;
             margin-left: 50px;
             border-top-left-radius: 20px;
             border-bottom-left-radius: 20px;
@@ -104,7 +108,7 @@
             color: #dadada;
             border: 7.5px solid;
             top: 0%;
-            left: 35.5%;
+            left: 40.5%;
         }
 
         .corner1 {
@@ -114,7 +118,7 @@
             border: 20px solid;
             border-radius: 20px;
             top: 0%;
-            left: 37.1%;
+            left: 42.1%;
         }
 
         .corner-cut2 {
@@ -123,7 +127,7 @@
             color: #dadada;
             border: 7.5px solid;
             bottom: 0%;
-            left: 35.5%;
+            left: 40.5%;
         }
 
         .corner2 {
@@ -133,7 +137,7 @@
             border: 20px solid;
             border-radius: 20px;
             bottom: 0%;
-            left: 36.95%;
+            left: 41.95%;
         }
 
         .base-before {
@@ -144,7 +148,7 @@
             height: 0;
             left: 0;
             position: absolute;
-            left: 1.15%;
+            left: 6.15%;
             top: 45%;
             width: 0;
             transform: rotate(270deg);
@@ -268,7 +272,7 @@
                         <span>Login</span>
                     </div>
                     <div class="remember-me">
-                        <input type="checkbox" id="remember-me" style="cursor: pointer;">
+                        <input type="checkbox" id="remember-me" style="cursor: pointer;" data-selection="false">
                             <label for="remember-me" style="cursor: pointer;">Remember me for 14 days</label>
                         </input>
                     </div>

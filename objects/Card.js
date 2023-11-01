@@ -3,18 +3,20 @@ import {Author} from './Author.js';
 export class Card {
     /**
     * @param {string} author
+    * @param {string} title
     * @param {string} description
     * @param {number} createDate
     * @param {Array<string>} tags
-    * @param {Array<string>} files
     * @param {number} views
     * @param {number} downloads
+    * @param {Array<string>} files
     * @param {string} pluginVersion
     * @param {string} mcVersion
     * @param {boolean} prem
     */
-    constructor(author, description, createDate, tags, views, downloads, files, pluginVersion, mcVersion, prem) {
+    constructor(author, title, description, createDate, tags, views, downloads, files, pluginVersion, mcVersion, prem) {
         this.author = new Author(author);
+        this.title = title;
         this.desc = description;
         this.creation = createDate;
         this.tags = tags;
@@ -31,6 +33,13 @@ export class Card {
      */
     getAuthor() {
         return this.author;
+    }
+
+    /**
+     * @returns {string}
+     */
+    getTitle() {
+        return this.title;
     }
 
     /**
@@ -55,13 +64,6 @@ export class Card {
     }
 
     /**
-     * @returns {Array<string>}
-     */
-    getFiles() {
-        return this.files;
-    }
-
-    /**
      * @returns {number}
      */
     getViews() {
@@ -73,6 +75,13 @@ export class Card {
      */
     getDownloads() {
         return this.downloads;
+    }
+
+    /**
+     * @returns {Array<string>}
+     */
+    getFiles() {
+        return this.files;
     }
 
     /**

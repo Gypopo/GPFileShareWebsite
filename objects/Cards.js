@@ -17,7 +17,7 @@ export class Cards {
     /**
      * @return {Map<string, Card>}
      */
-    get() {
+    getAll() {
         return this.cards;
     }
 
@@ -27,6 +27,16 @@ export class Cards {
      */
     get(id) {
         return this.cards.get(id);
+    }
+
+    /**
+     * @param {string} id
+     * @return {Card}
+     */
+    getByAuthor(id) {
+        return Array.from(this.cards).filter(function ([id, card]) {
+            return card.getAuthor().isDiscord() && card.getAuthor().getData() === id;
+        });
     }
 
     /**

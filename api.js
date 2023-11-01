@@ -1,4 +1,5 @@
 import { Card } from './objects/Card.js';
+import { User } from './objects/User.js';
 import { Author } from './objects/Author.js';
 
 export class API {
@@ -7,7 +8,7 @@ export class API {
   * @returns {Promise<Array<Card>>}.
   */
   async loadCards() {
-    var response = await this.fetchWithTimeout('http://192.168.55.170:3333/api/getCards', {
+    var response = await this.fetchWithTimeout(this.API_URL + 'getCards', {
       method: 'GET',
       timeout: 15000
     });
@@ -41,9 +42,25 @@ export class API {
     return map;
   }
 
+  /**
+     * @param {Map<string, Card>} cards
+     */
+  async getCardsByAuthorID(id) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'getCards?byAuthorID=' + id, {
+      method: 'GET',
+      timeout: 15000
+    });
+
+    var raw = await response.text();
+    var values = JSON.parse(raw);
+    var map = new Map(Object.entries(values).map(([key, value]) => [key, this.reviver(key, value)]));
+
+    return map;
+  }
+
   reviver(key, value) {
     if (typeof value === 'object') {
-      return new Card(value.author, value.description, value.creation, value.tags, value.views, value.downloads, value.files, value.plVer, value.mcVer, value.prem);
+      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.files, value.plVer, value.mcVer, value.prem);
     }
     return value;
   }
@@ -54,54 +71,56 @@ export class API {
   * @returns {Promise<string>}
   */
   async previewFile(layout, file) {
-    var response = await this.fetchWithTimeout('http://192.168.55.170:3333/api/previewFile?layout=' + layout + "&file=" + file, {
+    var response = await this.fetchWithTimeout(this.API_URL + 'previewFile?layout=' + layout + "&file=" + file, {
       method: 'GET',
-      timeout: 15000
+      timeout: 15000,
+      headers: this.form(),
     });
 
     return await response.text();
   }
 
-/**
-* @param {string} layout
-* @param {Card} card
-*/
-async downloadLayout(layout, card) {
+  /**
+  * @param {string} layout
+  * @param {Card} card
+  */
+  async downloadLayout(layout, card) {
     try {
 
-    var response = await this.fetchWithTimeout("http://192.168.55.170:3333/api/downloadLayout?layout=" + layout, {
-          method: 'GET',
-          timeout: 15000,
-          resolveWithFullResponse: true,
-          headers: form()
-        });
+      console.log(this.form());
+      var response = await this.fetchWithTimeout(this.API_URL + "downloadLayout?layout=" + layout, {
+        method: 'GET',
+        timeout: 15000,
+        resolveWithFullResponse: true,
+        headers: this.form(),
+      });
 
-        if (response.status === 200) {
+      if (response.status === 200) {
         var blob = await response.blob();
         //var raw = await response.text();
         //var bytes = this.base64ToArrayBuffer(raw);
         var element = document.createElement('a');
         element.style.display = 'none';
-          var url = window.URL.createObjectURL(blob);
-          element.href = url;
-          element.download = layout + ".zip";
-          element.click();
+        var url = window.URL.createObjectURL(blob);
+        element.href = url;
+        element.download = layout + ".zip";
+        element.click();
         document.body.appendChild(element);
         element.remove();
         window.URL.revokeObjectURL(url);
-        }
-
-        var self = this;
-        setTimeout(function() {
-          self.completeDownload(response.status);
-        }, 5000);
-      } catch (e) {
-        var self = this;
-        console.log(e);
-        setTimeout(function() {
-          self.completeDownload(503);
-        }, 5000);
       }
+
+      var self = this;
+      setTimeout(function () {
+        self.completeDownload(response.status);
+      }, 5000);
+    } catch (e) {
+      var self = this;
+      console.log(e);
+      setTimeout(function () {
+        self.completeDownload(503);
+      }, 5000);
+    }
   }
 
   /**
@@ -109,7 +128,7 @@ async downloadLayout(layout, card) {
     */
   completeDownload(status) {
     var e = document.getElementById('confirm content-small');
-    
+
     if (status == '200') {
       e.innerHTML = '<div class="wrapper"><svg class="animated-check" viewBox="0 0 24 24"><path d="M4.1 12.7L9 17.6 20.3 6.3" fill="none"></path></svg></div><b>Success</b>';
     } else if (status == '503') {
@@ -139,72 +158,210 @@ async downloadLayout(layout, card) {
 
     return response;
   }
-}
 
-function form() {
-  var obj = {};
-  var identity = getCookie('identity');
-  if (identity != null)
-    obj['identity'] = identity;
-  var token = getCookie('token');
-  if (token != null)
-    obj['token'] = token;
-  return obj;
-}
-
-/**
- * 
- * @param {string} cookie 
- * @returns {string}
- */
-function getCookie(cookie) {
-  let name = cookie + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let cookies = decodedCookie.split(';');
-  for(let i = 0; i <cookies.length; i++) {
-    let c = cookies[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+  form() {
+    var headers = {};
+    var identity = this.getCookie('sessionID');
+    if (identity != null) {
+      headers['sessionID'] = identity;
     }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+    var token = this.getCookie('token');
+    if (token != null) {
+      headers['token'] = token;
+    }
+    return headers;
+  }
+
+  /**
+   * 
+   * @param {string} cookie 
+   * @returns {string}
+   */
+  getCookie(cookie) {
+    let name = cookie + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let cookies = decodedCookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let c = cookies[i];
+      //console.log(c);
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 
+   * @param {string} cookie 
+   * @returns {string}
+   */
+  getCookieExpire(cookie) {
+    let name = cookie + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    console.log(document.cookie);
+    let cookies = decodedCookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let c = cookies[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0 && cookies.length >= i + 1) {
+        var meta = cookies[i + 1];
+        return meta.substring(name.length + 1, meta.length);
+      }
+    }
+    return null;
+  }
+
+  setCookie(cookie, value, remember) {
+    if (remember === 'true') {
+      var d = new Date();
+      d.setTime(d.getTime() + 1209600000);
+      this.setOldCookie(cookie, value, d.toUTCString());
+    } else {
+      document.cookie = cookie + "=" + value + ";";
     }
   }
-  return null;
-}
 
-async function login() {
-  var response = await this.fetchWithTimeout("http://192.168.55.170:3333/api/downloadLayout?layout=" + layout, {
-          method: 'GET',
-          timeout: 15000,
-          resolveWithFullResponse: true,
-          headers: form()
-        });
+  setOldCookie(cookie, value, expire) {
+    var expires = "expires=" + expire;
+    document.cookie = cookie + "=" + value + ";" + expires + ";path=/";
+  }
 
-        if (response.status === 200) {
-        var blob = await response.blob();
-        //var raw = await response.text();
-        //var bytes = this.base64ToArrayBuffer(raw);
-        var element = document.createElement('a');
-        element.style.display = 'none';
-          var url = window.URL.createObjectURL(blob);
-          element.href = url;
-          element.download = layout + ".zip";
-          element.click();
-        document.body.appendChild(element);
-        element.remove();
-        window.URL.revokeObjectURL(url);
+  setRawCookie(cookie, value, expire) {
+    var d = new Date();
+    d.setTime(expire);
+    this.setOldCookie(cookie, value, d.toUTCString());
+  }
+
+  setExistingCookie(cookie, value) {
+    document.cookie = cookie + "=" + value + ";";
+    console.log(cookie + "=" + value + ";");
+  }
+
+  base64ToBytes(base64) {
+    var binString = atob(base64);
+    return Uint8Array.from(binString, (m) => m.codePointAt(0));
+  }
+
+  bytesToBase64(bytes) {
+    var binString = String.fromCodePoint(...bytes);
+    return btoa(binString);
+  }
+
+  removeUserData() {
+    var expire = 'Thu, 01 Jan 1970 00:00:00 GMT';
+    this.setOldCookie('data', '', expire);
+    this.setOldCookie('sessionID', '', expire)
+    this.setOldCookie('token', '', expire);
+  }
+
+  /**
+   * 
+   * @returns {Promise<User>}
+   */
+  async getUserData() {
+    try {
+      var cached = this.getCookie('data');
+      if (cached != null && cached != '') {
+        var obj = JSON.parse(atob(cached));
+        return new User(obj.username, obj.avatar, obj.authenticated, obj.userID);
+      } else {
+        var sessionID = this.getCookie('sessionID');
+        var token = this.getCookie('token');
+        if ((sessionID != null && sessionID != '') && (token != null && token != '')) {
+          // New session || Refresh user data
+          var user = await this.getKnownUserData(sessionID, token);
+          return user;
+        } else return null;
+      }
+    } catch (e) {
+      console.warn(e + this.getCookie('data'));
+      this.setOldCookie('data', '', 'Thu, 01 Jan 1970 00:00:00 GMT');
+      return null;
+    }
+  }
+
+  async getKnownUserData(sessionID, token) {
+    try {
+      var response = await this.fetchWithTimeout(this.API_URL + "getUserData?sessionID=" + sessionID + "&token=" + token, {
+        method: 'GET',
+        timeout: 15000,
+        resolveWithFullResponse: true,
+        headers: this.form(),
+      });
+
+      if (response.status === 200) {
+        var headers = response.headers;
+
+        if (headers.has('sessionID') && headers.has('token') && headers.has('expire')) {
+          this.setRawCookie('sessionID', headers.get('sessionID'), headers.get('expire'));
+          this.setRawCookie('token', headers.get('token'), headers.get('expire'));
         }
 
-        var self = this;
-        setTimeout(function() {
-          self.completeDownload(response.status);
-        }, 5000);
-      } catch (e) {
-        var self = this;
-        console.log(e);
-        setTimeout(function() {
-          self.completeDownload(503);
-        }, 5000);
+        // Still logged in using cookies/Remember me option
+        var raw = await response.text();
+
+        // Store the userdata in a cookie as text, to later retrieve as a User object
+        this.setCookie('data', raw, false);
+
+        var obj = JSON.parse(atob(raw));
+        return new User(obj.username, obj.avatar, obj.authenticated, obj.userID);
       }
+
+      return null;
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
+  }
+
+  /**
+   * 
+   * @returns {Promise<User>}
+   */
+  async retrieveUserData(token, remember) {
+    try {
+      var response = await this.fetchWithTimeout(this.API_URL + "retrieveUserData?token=" + token, {
+        method: 'GET',
+        timeout: 15000,
+        resolveWithFullResponse: true,
+      });
+
+      if (response.status === 200) {
+        var headers = response.headers;
+
+        //console.log(...headers);
+        if (headers.has('sessionID') && headers.has('token')) {
+          this.setCookie('sessionID', headers.get('sessionID'), remember);
+          this.setCookie('token', headers.get('token'), remember);
+        } else {
+          console.warn('No sessionID/token received from server');
+          alert('Failed to login at this time, please try again soon.');
+        }
+
+        // Still logged in using cookies/Remember me option
+        var raw = await response.text();
+
+        // Store the userdata in a cookie as text, to later retrieve as a User object
+        this.setCookie('data', raw, false);
+
+        console.log(atob(raw));
+
+        var obj = JSON.parse(atob(raw));
+        return new User(obj.username, obj.avatar, obj.authenticated, obj.userID);
+      }
+
+      return null;
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
+  }
+
+  API_URL = 'http://192.168.55.170:3333/api/'/*'https://api.gpplugins.com:2096/val/'*/;
 }

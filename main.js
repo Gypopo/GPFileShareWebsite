@@ -1,14 +1,18 @@
 //var query = require('./database/MySQL.js');
-import {API} from './api.js';
+import { API } from './api.js';
 var pages = document.getElementById('pages');
-import {Card} from './objects/Card.js';
+import { Card } from './objects/Card.js';
 //import SearchResults from './objects/SearchResults.js';
-import {Cards} from './objects/Cards.js';
-import {Author} from './objects/Author.js';
+import { Cards } from './objects/Cards.js';
+import { Author } from './objects/Author.js';
+import { Searchbar } from './searchbar.js';
+import { NavBar } from './navbar.js';
 
-    //console.log(apiCall());
+//console.log(apiCall());
 var cards = new Cards;
 var api = new API();
+var searchbar = new Searchbar();
+var navBar = new NavBar(api);
 
 init();
 
@@ -20,11 +24,11 @@ async function init() {
             //console.log(v)
             completeLoading();
         });
-    } catch(e) {
+    } catch (e) {
         if (e.name === 'AbortError') {
-            alert('A timeout exception occured while trying to reach the backend server, please report this issue to: https://discord.com/invite/nPyuB4F');
+            alert('A timeout exception occured while trying to reach the backend server, please report this issue to: https://discord.gpplugins.com');
         } else {
-            alert('It looks like there was an error while trying to load this page, please report this to our discord at: https://discord.com/invite/nPyuB4F');
+            alert('It looks like there was an error while trying to load this page, please report this to our discord at: https://discord.gpplugins.com');
         }
         console.log(e);
     }
@@ -78,9 +82,10 @@ async function completeLoading() {
 
     var loader = document.getElementById('loader')
     document.body.removeChild(loader);
-    
 
     pages.appendChild(page);
+
+    searchbar.initItems(cards);
 
     if (window.location.href.includes('?')) {
         try {
@@ -120,7 +125,7 @@ async function completeLoading() {
  */
 function createCard(id, card) {
     var div = document.createElement('div');
-    div.onclick = function() {
+    div.onclick = function () {
         history.pushState(null, null, window.location.href + "?layout=" + id);
         displayCard(id, card);
     }
@@ -135,7 +140,7 @@ function createCard(id, card) {
     addContainer(div, card);
 
     //var cards = new Card(1, 'Gypopo', "Cool looking gui layout's", '4am', '#op, #skyblock #survival #basic #cheap #modern #oldSchool french, everyItem', '5.2.4', '1.19, 1.18');
-    
+
     return div;
 }
 
@@ -176,12 +181,14 @@ function tagPremium(div) {
  */
 function addContainer(div, card) {
     var container = document.createElement('div');
-    container.className = 'container';
+    container.className = 'cardContainer';
 
-    appendMCVersions(container, card);
+    appendDownloads(container, card);
+    //appendMCVersions(container, card);
+    appendTitle(container, card);
     appendAuthor(container, card);
     appendTags(container, card);
-    
+
     div.appendChild(container);
 }
 
@@ -213,6 +220,18 @@ function appendAuthor(div, card) {
  * @param {HTMLDivElement} div
  * @param {Card} card
  */
+function appendTitle(div, card) {
+    var author = document.createElement('div');
+    author.className = 'author';
+    author.innerHTML = '<b>Title: </b>' + card.getTitle();
+
+    div.appendChild(author);
+}
+
+/**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
 function appendTags(div, card) {
     var tags = document.createElement('div');
     tags.className = 'tags';
@@ -222,8 +241,8 @@ function appendTags(div, card) {
     tagDiv.className = 'tags tag';
 
     var tag = '';
-    for(var i of card.getTags()) {
-       tag = tag + '#' + i + ' ';
+    for (var i of card.getTags()) {
+        tag = tag + '#' + i + ' ';
     }
     tagDiv.innerHTML = tag;
 
@@ -232,12 +251,28 @@ function appendTags(div, card) {
 }
 
 /**
+ * @param {HTMLDivElement} div
+ * @param {Card} card
+ */
+function appendDownloads(div, card) {
+    var container = document.createElement('div');
+    container.style.position = 'relative';
+
+    var downloadCount = document.createElement('div');
+    downloadCount.className = 'downloadCount';
+    downloadCount.innerHTML = '<img src="pics/download.svg" height=20></img> ' + card.getDownloads();
+    container.appendChild(downloadCount);
+
+    div.appendChild(container);
+}
+
+/**
  * @param {HTMLDivElement} div 
  */
 function addSeperator(div) {
     var seperator = document.createElement('div');
     seperator.className = 'seperator';
-    
+
     var line = document.createElement('hr');
     line.style.border = '2px solid';
     line.style.borderColor = 'black';
@@ -247,12 +282,12 @@ function addSeperator(div) {
     div.appendChild(seperator);
 }
 
-function loadCard(uuid, author, mcVersion, plVersion, ) {
+function loadCard(uuid, author, mcVersion, plVersion,) {
     var card = document.createElement('div');
-    card.onclick = function() {displayCard(card);}
+    card.onclick = function () { displayCard(card); }
     card.className = 'card';
     card.title = 'Click to show';
-    
+
     return card;
 }
 
@@ -263,7 +298,7 @@ function loadCard(uuid, author, mcVersion, plVersion, ) {
 function displayCard(id, card) {
     //setViewParam(id);
     //window.location.href = window.location.href + "card?id=" + id;
-    
+
     var overlay = document.createElement('div');
     overlay.className = 'overlay';
     overlay.id = 'overlay';
@@ -272,12 +307,28 @@ function displayCard(id, card) {
     content.className = 'overlay-content';
 
     var title = document.createElement('div');
-    title.innerHTML = 'Quick overview:';
+    title.innerHTML = 'Layout overview:';
     title.className = 'overlay-title';
     content.appendChild(title);
-    
+
     var box = document.createElement('div');
     box.className = 'overlay-box';
+
+    // Verified author?
+    if (card.getAuthor().getMethod() == 'DISCORD') {
+        var verifiedCheck = document.createElement('img');
+        verifiedCheck.src = 'pics/verified-author.svg'
+        verifiedCheck.title = 'The author of this layout verified thru discord';
+        verifiedCheck.className = 'overlay-verifiedAuthor';
+        content.appendChild(verifiedCheck);
+    }
+
+    // Title
+    var title = document.createElement('div');
+    title.className = 'overlay-layoutTitle';
+    title.innerHTML = '<b>Title: </b>' + card.getTitle();
+    title.title = card.getTitle();
+    box.appendChild(title);
 
     // Desc
     var desc = document.createElement('div');
@@ -289,7 +340,7 @@ function displayCard(id, card) {
     // MC Version
     var mcVer = document.createElement('div');
     mcVer.className = 'overlay-ver';
-    mcVer.innerHTML = '<b>MC version(s): </b>' + card.getMinecraftVersions();
+    mcVer.innerHTML = '<b>Tested MC version(s): </b>' + card.getMinecraftVersions();
     box.appendChild(mcVer);
 
     // Plugin version
@@ -297,6 +348,19 @@ function displayCard(id, card) {
     plVer.className = 'overlay-ver';
     plVer.innerHTML = '<b>Plugin version: </b>' + card.getPluginVersion();
     box.appendChild(plVer);
+
+    // Creation date
+    var d = new Date();
+    d.setTime(card.getCreation());
+
+    var creationDate = document.createElement('div');
+    creationDate.className = 'overlay-creationDate';
+    creationDate.innerHTML = '<b>Creation date: </b>' + d.toUTCString();
+    box.appendChild(creationDate);
+
+    var creationDate = document.createElement('div');
+    creationDate.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
+    box.appendChild(creationDate);
 
     // Layout files
     var filesBox = document.createElement('div');
@@ -312,7 +376,7 @@ function displayCard(id, card) {
 
     var buttonRow = createButtonRow(id);
     box.appendChild(buttonRow);
-    
+
     content.appendChild(box);
 
     overlay.appendChild(content);
@@ -332,12 +396,12 @@ function getFiles(card) {
     var html = '';
     var files = card.getFiles();
     for (let i = 0; i < files.length; i++) {
-        html += '<a style="cursor: pointer;color:blue;text-decoration:underline;" id="previewFile=' + files.at(i) + '">' + files.at(i) + '</a>';
-        if (i != files.length-1) {
+        html += '<a style="cursor: pointer;color:#0040AE;" id="previewFile=' + files.at(i) + '"><b>' + files.at(i) + '</b></a>';
+        if (i != files.length - 1) {
             html += ' - ';
         }
     }
-    
+
     return html;
 }
 
@@ -349,7 +413,7 @@ function addFilePreviews(layout, card) {
     var files = card.getFiles();
     for (let i = 0; i < files.length; i++) {
         var file = document.getElementById("previewFile=" + files.at(i));
-        file.addEventListener("click", function() {
+        file.addEventListener("click", function () {
             fastPreview(layout, files.at(i));
         });
     }
@@ -370,7 +434,6 @@ async function fastPreview(layout, file) {
 
         previewFile(layout, file, v);
     });
-
 }
 
 /**
@@ -390,7 +453,7 @@ function previewFile(layout, file, payload) {
     title.innerHTML = 'File preview:';
     title.className = 'overlay-title';
     content.appendChild(title);
-    
+
     var box = document.createElement('div');
     box.className = 'overlay-box';
     box.innerHTML = '<pre style="max-height:545px;"><code class="language-yaml" id="yamlCode">' + payload + "</code></pre>";
@@ -421,7 +484,7 @@ function createPreviewButtonRow(layout) {
     button1.className = 'preview-button';
     button1.innerHTML = 'Download';
     button1.onclick = function () {
-
+        // Todo
     }
     buttonRow.appendChild(button1);
 
@@ -434,7 +497,7 @@ function createPreviewButtonRow(layout) {
 
         var overlay = document.getElementById('overlay');
         overlay.remove();
-        
+
         displayCard(layout, cards.get(layout));
     }
     buttonRow.appendChild(button2);
@@ -456,23 +519,46 @@ function createButtonRow(layout) {
     button1.style.marginRight = '5%';
     button1.innerHTML = 'Download';
     button1.onclick = function () {
-        startDownload();
-        api.downloadLayout(layout, cards.get(layout))
+        createDownloadDisclaimer();
+
+        var confirm = document.getElementById('disclaimer-confimButton');
+        confirm.onclick = function () {
+            var overlay = document.getElementById('disclaimer-overlay');
+            overlay.remove();
+
+            var card = cards.get(layout);
+            api.getUserData().then(user => {
+                if (!card.isPremium() || user) {
+                    startDownload();
+                    api.downloadLayout(layout, cards.get(layout)).catch();
+                } else
+                    alert('You are not authorized to download this layout.');
+            });
+        }
     }
     buttonRow.appendChild(button1);
 
     var button3 = document.createElement('button');
     button3.className = 'card-button';
+    button3.style.width = '40%';
     button3.style.marginRight = '5%';
     button3.innerHTML = 'Get install command';
     button3.onclick = function () {
+        createDownloadDisclaimer();
 
+        var confirm = document.getElementById('disclaimer-confimButton');
+        confirm.onclick = function () {
+            var overlay = document.getElementById('disclaimer-overlay');
+            overlay.remove();
+
+            createInstallCommandOverlay(layout);
+        }
     }
     buttonRow.appendChild(button3);
 
     var button2 = document.createElement('button');
     button2.className = 'card-button';
-    button2.innerHTML = '<- Back';
+    button2.innerHTML = 'Close';
     button2.onclick = function () {
         var link = window.location.href.split('?')[0];
         history.pushState(null, null, link);
@@ -483,6 +569,91 @@ function createButtonRow(layout) {
     buttonRow.appendChild(button2);
 
     return buttonRow;
+}
+
+function createDownloadDisclaimer() {
+    var overlay = document.createElement('div');
+    overlay.className = 'disclaimer-overlay';
+    overlay.id = 'disclaimer-overlay';
+    overlay.onclick = function (e) {
+        if (e.target == overlay) {
+            document.body.removeChild(overlay);
+            history.pushState(null, null, "/");
+        }
+    }
+
+    var content = document.createElement('div');
+    content.className = 'disclaimer-content';
+
+    var title = document.createElement('div');
+    title.innerHTML = 'Disclaimer:';
+    title.className = 'disclaimer-title';
+    content.appendChild(title);
+
+    var box = document.createElement('div');
+    box.className = 'disclaimer-box';
+    content.appendChild(box);
+
+    var disclaimerDescription = document.createElement('span');
+    disclaimerDescription.innerHTML = 'All layouts on this site are created/uploaded by comminity members<br>and may not be validated by our staff.<br><br>\
+    Altough all layouts get scanned for malicious content upon uploading it to this site,<br>it is recommended to validate the installed layout manually for exploitable/unfair prices before using it on your server.';
+    box.appendChild(disclaimerDescription);
+
+    var button1 = document.createElement('div');
+    button1.className = 'disclaimer-confimButton';
+    button1.id = 'disclaimer-confimButton';
+    button1.innerHTML = 'I agree';
+    box.appendChild(button1);
+
+    overlay.appendChild(content);
+
+    document.body.appendChild(overlay);
+}
+
+function createInstallCommandOverlay(id) {
+    var overlay = document.createElement('div');
+    overlay.className = 'installCommand-overlay';
+    overlay.id = 'installCommand-overlay';
+    overlay.onclick = function (e) {
+        if (e.target == overlay) {
+            document.body.removeChild(overlay);
+            history.pushState(null, null, "/");
+        }
+    }
+
+    var content = document.createElement('div');
+    content.className = 'installCommand-content';
+
+    var title = document.createElement('div');
+    title.innerHTML = 'Install command:';
+    title.className = 'installCommand-title';
+    content.appendChild(title);
+
+    var box = document.createElement('div');
+    box.className = 'installCommand-box';
+    content.appendChild(box);
+
+    var disclaimerDescription = document.createElement('span');
+    disclaimerDescription.style.textAlign = 'center';
+    disclaimerDescription.innerHTML = 'Use the following command on your server to install this layout';
+    box.appendChild(disclaimerDescription);
+
+    var cmd = '/eshop installLayout ' + id;
+    var command = document.createElement('div');
+    command.className = 'installCommand-command';
+    command.title = 'Click to copy'
+    command.innerHTML = '<b>' + cmd + '</b>';
+    command.onclick = function () {
+        navigator.clipboard.writeText(cmd).then(
+            function () {
+                alert("Successfully copied command to clipboard");
+            }).catch(function () { alert("Failed to copy command to clipboard"); });
+    }
+    box.appendChild(command);
+
+    overlay.appendChild(content);
+
+    document.body.appendChild(overlay);
 }
 
 function startDownload() {
@@ -510,7 +681,7 @@ function setViewParam(id) {
 
 function closeListener(e) {
     var overlay = document.getElementById('overlay');
-    
+
     if (e.target == overlay) {
         document.body.removeChild(overlay);
         history.pushState(null, null, "/");
