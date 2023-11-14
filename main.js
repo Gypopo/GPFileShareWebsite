@@ -332,8 +332,17 @@ function displayCard(id, card) {
 
     // Desc
     var desc = document.createElement('div');
-    desc.className = 'overlay-desc';
-    desc.innerHTML = '<b>Description: </b>' + card.getDescription();
+    var description = card.getDescription();
+    //console.log((card.getDescription().includes('\n') ? '<br>' : ''))
+    var html = '<b>Description: </b>';
+    if (card.getDescription().includes('\n')) {
+        desc.className = 'overlay-desc long';
+        html += '<br>' + description.replaceAll('\n', '<br>');
+    } else {
+        desc.className = 'overlay-desc short';
+        html += description
+    }
+    desc.innerHTML = html;
     desc.title = card.getDescription();
     box.appendChild(desc);
 

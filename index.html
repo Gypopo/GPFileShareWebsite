@@ -330,10 +330,18 @@
             height: fit-content;
             width: fit-content;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
             max-width: inherit;
             margin-bottom: 10px;
+        }
+
+        .overlay-desc .long {
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+        }
+
+        .overlay-desc .short {
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
 
         .overlay-filePreview {

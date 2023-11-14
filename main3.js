@@ -140,7 +140,6 @@ function displayCard(id, card) {
     content.appendChild(box);
 
     overlay.appendChild(content);
-    overlay.onclick = closeListener;
 
     document.body.appendChild(overlay);
 
@@ -172,15 +171,16 @@ function addEditBox(key, value) {
     editBox.className = 'editBox';
     editBox.id = 'editBox_' + key;
     editBox.name = 'editBox_' + key;
-    editBox.innerText = value;
+    editBox.innerHTML = value.replaceAll('\n', '\r\n');
     if (key === 'title') {
         editBox.maxLength = 32;
     } else if (key === 'desc') {
         editBox.maxLength = 128;
         editBox.style.maxHeight = '100px';
+        var lines = value.split(/\r|\r\n|\n/);
+        editBox.style.height = (lines.length != 1 ? ((lines.length-1) * 18) + 28 : 30) + 'px';
         editBox.onkeydown = function (e) {
             var box = document.getElementById('editBox_desc');
-            var lines = box.value.split(/\r|\r\n|\n/);
             if (box.style.height.replace('px', '') >= 100 && e.code === 'Enter') {
                 e.preventDefault();
             }
@@ -251,7 +251,7 @@ function saveCard(card) {
     console.log(desc);
 
     card.title = title;
-    card.desc = desc;
+    card.description = desc;
 
     return card;
 }

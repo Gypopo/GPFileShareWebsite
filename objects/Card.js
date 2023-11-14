@@ -17,7 +17,7 @@ export class Card {
     constructor(author, title, description, createDate, tags, views, downloads, files, pluginVersion, mcVersion, prem) {
         this.author = new Author(author);
         this.title = title;
-        this.desc = description;
+        this.description = description;
         this.creation = createDate;
         this.tags = tags;
         this.views = views;
@@ -46,7 +46,7 @@ export class Card {
      * @returns {string}
      */
     getDescription() {
-        return this.desc;
+        return this.description;
     }
 
     /**
