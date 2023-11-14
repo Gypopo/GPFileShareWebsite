@@ -81,13 +81,30 @@ export class API {
   }
 
   /**
+   * @param {string} layout
+   * @param {Card} card
+   */
+  async updateCard(layout, card) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'updateCard?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: this.form(),
+      body: JSON.stringify(card),
+    });
+    this.updateData(response.headers);
+
+    console.log(response.status + ' - ' + response.ok);
+
+    return response.ok;
+  }
+
+  /**
   * @param {string} layout
   * @param {Card} card
   */
   async downloadLayout(layout, card) {
     try {
 
-      console.log(this.form());
       var response = await this.fetchWithTimeout(this.API_URL + "downloadLayout?layout=" + layout, {
         method: 'GET',
         timeout: 15000,
@@ -260,6 +277,13 @@ export class API {
     this.setOldCookie('token', '', expire);
   }
 
+  updateData(headers) {
+    if (headers.has('sessionID') && headers.has('token') && headers.has('expire')) {
+      this.setRawCookie('sessionID', headers.get('sessionID'), headers.get('expire'));
+      this.setRawCookie('token', headers.get('token'), headers.get('expire'));
+    }
+  }
+
   /**
    * 
    * @returns {Promise<User>}
@@ -297,11 +321,7 @@ export class API {
 
       if (response.status === 200) {
         var headers = response.headers;
-
-        if (headers.has('sessionID') && headers.has('token') && headers.has('expire')) {
-          this.setRawCookie('sessionID', headers.get('sessionID'), headers.get('expire'));
-          this.setRawCookie('token', headers.get('token'), headers.get('expire'));
-        }
+        this.updateData(headers);
 
         // Still logged in using cookies/Remember me option
         var raw = await response.text();
