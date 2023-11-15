@@ -14,7 +14,7 @@ export class Card {
     * @param {string} mcVersion
     * @param {boolean} prem
     */
-    constructor(author, title, description, createDate, tags, views, downloads, files, pluginVersion, mcVersion, prem) {
+    constructor(author, title, description, createDate, tags, views, downloads, screenshots, files, pluginVersion, mcVersion, prem) {
         this.author = new Author(author);
         this.title = title;
         this.description = description;
@@ -22,6 +22,7 @@ export class Card {
         this.tags = tags;
         this.views = views;
         this.downloads = downloads;
+        this.screenshots = screenshots;
         this.files = files;
         this.plVer = pluginVersion;
         this.mcVer = mcVersion;

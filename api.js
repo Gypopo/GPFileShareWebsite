@@ -60,7 +60,7 @@ export class API {
 
   reviver(key, value) {
     if (typeof value === 'object') {
-      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.files, value.plVer, value.mcVer, value.prem);
+      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.screenshots, value.files, value.plVer, value.mcVer, value.prem);
     }
     return value;
   }
@@ -94,6 +94,40 @@ export class API {
     this.updateData(response.headers);
 
     console.log(response.status + ' - ' + response.ok);
+
+    return response.ok;
+  }
+
+  /**
+   * @param {string} layout
+   * @param {File} screenshot
+   * @param {string} type
+   */
+  async uploadScreenshot(layout, screenshot) {
+    var headers = this.form();
+    headers['Content-Type'] = screenshot.type;
+    headers['fileName'] = screenshot.name;
+
+    var response = await this.fetchWithTimeout(this.API_URL + 'appendScreenshot?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: headers,
+      body: screenshot,
+    });
+
+    return response.ok;
+  }
+
+  /**
+   * @param {string} layout
+   */
+  async deleteLayout(layout) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'deleteLayout?layout=' + layout, {
+      method: 'GET',
+      timeout: 15000,
+      headers: this.form(),
+    });
+    this.updateData(response.headers);
 
     return response.ok;
   }

@@ -111,6 +111,7 @@ function displayCard(id, card) {
 
     var box = document.createElement('div');
     box.className = 'overlay-box';
+    box.id = 'overlay-box';
 
     // Title
     var title = document.createElement('label');
@@ -128,11 +129,67 @@ function displayCard(id, card) {
     box.appendChild(desc);
     box.appendChild(addEditBox('desc', card.getDescription()));
 
-    //var screenshots = document.createElement('label');
-    //screenshots.htmlFor = 'editBox_desc';
-    //screenshots.className = 'overlay-editKey';
-    //screenshots.innerHTML = '<b>Description:</b>';
+    // Add later, CDN?
+    /*
+    // Screenshots
+    var screenshots = document.createElement('label');
+    screenshots.htmlFor = 'editBox_screenshots';
+    screenshots.className = 'overlay-editKey';
+    screenshots.innerHTML = '<b>Screenshots:</b>';
+    box.appendChild(screenshots);
 
+    var currentSS = document.createElement('ul');
+    currentSS.className = 'screenshots'
+    var ssElement = document.createElement('li');
+    var ss = document.createElement('a');
+    ss.innerText = 'screenshot-1.jpg';
+    ss.href = '#';
+    ss.style.color = 'white';
+    ssElement.append(ss);
+    currentSS.appendChild(ssElement);
+    box.appendChild(currentSS);
+
+    //var ssAddBoxLabel = document.createElement('label');
+    //ssAddBoxLabel.htmlFor = 'ss_input';
+    //ssAddBoxLabel.innerHTML = 'Upload screenshots:';
+    //box.appendChild(ssAddBoxLabel);
+
+    var ssAddInput = document.createElement('input');
+    ssAddInput.type = 'file';
+    ssAddInput.id = 'ss_input';
+    ssAddInput.accept = 'image/*';
+    ssAddInput.style.display = 'none';
+    ssAddInput.onchange = function (e) {
+        var files = e.target.files;
+
+        console.log(files[0].name);
+        var allowedTypes = ['image/jpg', 'image/png'];
+
+        for (var file of files) {
+            if (!allowedTypes.includes(file.type)) {
+                alert('❌ File ' + file.name + ' could not be uploaded. Only images with the following types are allowed: JPG, PNG.');
+                return;
+            }
+        }
+        var selectedSS = document.createElement('label');
+        selectedSS.innerHTML = files[0].name;
+        selectedSS.htmlFor = 'ss_button';
+        selectedSS.style.marginTop = '5px';
+        document.getElementById('overlay-box').appendChild(selectedSS);
+    }
+
+    var ssAddButton = document.createElement('div');
+    ssAddButton.id = 'ss_button';
+    ssAddButton.className = 'ss_button';
+    ssAddButton.name = 'ss_button';
+    ssAddButton.innerHTML = 'Upload screenshot';
+    ssAddButton.onclick = function () {
+        ssAddInput.click();
+    }
+
+    ssAddButton.appendChild(ssAddInput);
+    box.appendChild(ssAddButton);
+    */
 
     var buttonRow = createButtonRow(id, card);
     box.appendChild(buttonRow);
@@ -178,7 +235,7 @@ function addEditBox(key, value) {
         editBox.maxLength = 128;
         editBox.style.maxHeight = '100px';
         var lines = value.split(/\r|\r\n|\n/);
-        editBox.style.height = (lines.length != 1 ? ((lines.length-1) * 18) + 28 : 30) + 'px';
+        editBox.style.height = (lines.length != 1 ? ((lines.length - 1) * 18) + 28 : 30) + 'px';
         editBox.onkeydown = function (e) {
             var box = document.getElementById('editBox_desc');
             if (box.style.height.replace('px', '') >= 100 && e.code === 'Enter') {
@@ -205,28 +262,50 @@ function createButtonRow(layout, card) {
 
     var button1 = document.createElement('button');
     button1.className = 'card-button';
-    button1.style.width = '42.5%'
+    button1.style.width = '30%'
     button1.style.marginRight = '5%';
-    button1.style.marginLeft = '5%';
     button1.innerHTML = 'Save & Publish';
     button1.onclick = function () {
         card = saveCard(card);
         api.updateCard(layout, card).then(function (status) {
             if (status) {
-            var overlay = document.getElementById('overlay');
-            overlay.remove();
+                var overlay = document.getElementById('overlay');
+                overlay.remove();
             } else {
                 alert('Failed to save this card');
             }
         }).catch(function () {
             alert('Failed to save this card');
         });
+
+        /*
+        // Add later, CDN?
+        var files = document.getElementById('ss_input').files;
+        if (files.length != 0) {
+        api.uploadScreenshot(layout, files[0], files[0].type).then(function(status) {
+
+        });
+    }
+    */
     }
     buttonRow.appendChild(button1);
 
+    var button3 = document.createElement('button');
+    button3.className = 'card-button';
+    button3.style.width = '30%'
+    button3.style.marginRight = '5%';
+    button3.innerHTML = 'Delete layout';
+    button3.onclick = function () {
+        api.deleteLayout(layout).then(function() {
+            var overlay = document.getElementById('overlay');
+            overlay.remove();
+        });
+    }
+    buttonRow.appendChild(button3);
+
     var button2 = document.createElement('button');
     button2.className = 'card-button';
-    button2.style.width = '42.5%'
+    button2.style.width = '30%'
     button2.innerHTML = 'Close';
     button2.onclick = function () {
         var link = window.location.href.split('?')[0];
