@@ -371,6 +371,20 @@ function displayCard(id, card) {
     creationDate.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
     box.appendChild(creationDate);
 
+    // Later, CDN?
+    /*
+    // Layout screenshots
+    var ss_box = document.createElement('div');
+    ss_box.className = 'overlay-ss_box';
+    
+    var ss_1 = document.createElement('img');
+    ss_1.className = 'screenshot'
+    ss_1.style.height = '100%';
+    ss_1.style.width = '100%';
+    ss_box.appendChild(ss_1);
+    box.appendChild(ss_box);
+    */
+
     // Layout files
     var filesBox = document.createElement('div');
     filesBox.className = 'overlay-filesBox';
