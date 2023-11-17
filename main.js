@@ -368,7 +368,7 @@ function displayCard(id, card) {
     box.appendChild(creationDate);
 
     var creationDate = document.createElement('div');
-    creationDate.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
+    creationDate.innerHTML = '<b>File count: </b>' + card.getFiles().length;
     box.appendChild(creationDate);
 
     // Later, CDN?
