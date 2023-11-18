@@ -332,8 +332,17 @@ function displayCard(id, card) {
 
     // Desc
     var desc = document.createElement('div');
-    desc.className = 'overlay-desc';
-    desc.innerHTML = '<b>Description: </b>' + card.getDescription();
+    var description = card.getDescription();
+    //console.log((card.getDescription().includes('\n') ? '<br>' : ''))
+    var html = '<b>Description: </b>';
+    if (card.getDescription().includes('\n')) {
+        desc.className = 'overlay-desc long';
+        html += '<br>' + description.replaceAll('\n', '<br>');
+    } else {
+        desc.className = 'overlay-desc short';
+        html += description
+    }
+    desc.innerHTML = html;
     desc.title = card.getDescription();
     box.appendChild(desc);
 
@@ -359,8 +368,22 @@ function displayCard(id, card) {
     box.appendChild(creationDate);
 
     var creationDate = document.createElement('div');
-    creationDate.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
+    creationDate.innerHTML = '<b>File count: </b>' + card.getFiles().length;
     box.appendChild(creationDate);
+
+    // Later, CDN?
+    /*
+    // Layout screenshots
+    var ss_box = document.createElement('div');
+    ss_box.className = 'overlay-ss_box';
+    
+    var ss_1 = document.createElement('img');
+    ss_1.className = 'screenshot'
+    ss_1.style.height = '100%';
+    ss_1.style.width = '100%';
+    ss_box.appendChild(ss_1);
+    box.appendChild(ss_box);
+    */
 
     // Layout files
     var filesBox = document.createElement('div');

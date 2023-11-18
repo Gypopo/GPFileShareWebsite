@@ -60,7 +60,7 @@ export class API {
 
   reviver(key, value) {
     if (typeof value === 'object') {
-      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.files, value.plVer, value.mcVer, value.prem);
+      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.screenshots, value.files, value.plVer, value.mcVer, value.prem);
     }
     return value;
   }
@@ -81,13 +81,64 @@ export class API {
   }
 
   /**
+   * @param {string} layout
+   * @param {Card} card
+   */
+  async updateCard(layout, card) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'updateCard?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: this.form(),
+      body: JSON.stringify(card),
+    });
+    this.updateData(response.headers);
+
+    console.log(response.status + ' - ' + response.ok);
+
+    return response.ok;
+  }
+
+  /**
+   * @param {string} layout
+   * @param {File} screenshot
+   * @param {string} type
+   */
+  async uploadScreenshot(layout, screenshot) {
+    var headers = this.form();
+    headers['Content-Type'] = screenshot.type;
+    headers['fileName'] = screenshot.name;
+
+    var response = await this.fetchWithTimeout(this.API_URL + 'appendScreenshot?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: headers,
+      body: screenshot,
+    });
+
+    return response.ok;
+  }
+
+  /**
+   * @param {string} layout
+   */
+  async deleteLayout(layout) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'deleteLayout?layout=' + layout, {
+      method: 'GET',
+      timeout: 15000,
+      headers: this.form(),
+    });
+    this.updateData(response.headers);
+
+    return response.ok;
+  }
+
+  /**
   * @param {string} layout
   * @param {Card} card
   */
   async downloadLayout(layout, card) {
     try {
 
-      console.log(this.form());
       var response = await this.fetchWithTimeout(this.API_URL + "downloadLayout?layout=" + layout, {
         method: 'GET',
         timeout: 15000,
@@ -227,15 +278,19 @@ export class API {
     }
   }
 
-  setOldCookie(cookie, value, expire) {
-    var expires = "expires=" + expire;
-    document.cookie = cookie + "=" + value + ";" + expires + ";path=/";
+  setOldCookie(cookie, value, remember, expire) {
+    if (remember) {
+      var expires = "expires=" + expire;
+      document.cookie = cookie + "=" + value + ";" + expires + ";path=/";
+    } else {
+      document.cookie = cookie + "=" + value + ";";
+    }
   }
 
   setRawCookie(cookie, value, expire) {
     var d = new Date();
     d.setTime(expire);
-    this.setOldCookie(cookie, value, d.toUTCString());
+    this.setOldCookie(cookie, value, expire != 0, d.toUTCString());
   }
 
   setExistingCookie(cookie, value) {
@@ -258,6 +313,13 @@ export class API {
     this.setOldCookie('data', '', expire);
     this.setOldCookie('sessionID', '', expire)
     this.setOldCookie('token', '', expire);
+  }
+
+  updateData(headers) {
+    if (headers.has('sessionID') && headers.has('token') && headers.has('expire')) {
+      this.setRawCookie('sessionID', headers.get('sessionID'), headers.get('expire'));
+      this.setRawCookie('token', headers.get('token'), headers.get('expire'));
+    }
   }
 
   /**
@@ -297,11 +359,7 @@ export class API {
 
       if (response.status === 200) {
         var headers = response.headers;
-
-        if (headers.has('sessionID') && headers.has('token') && headers.has('expire')) {
-          this.setRawCookie('sessionID', headers.get('sessionID'), headers.get('expire'));
-          this.setRawCookie('token', headers.get('token'), headers.get('expire'));
-        }
+        this.updateData(headers);
 
         // Still logged in using cookies/Remember me option
         var raw = await response.text();

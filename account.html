@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
+    <script src="gtag.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caprasimo|Kanit:wght@300&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600&display=swap">
     <link rel="stylesheet" href="css/nav.css">
@@ -39,11 +41,236 @@
             background-color: #dfdfdf;
             transition: background-color 1s;
             margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .expand-card {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            right: 10px;
         }
 
         .layout-card:hover {
       background-color: #dfdfdf;
     }
+
+    .overlay {
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            bottom: 0px;
+        }
+
+        .overlay-content {
+            position: absolute;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            max-width: 500px;
+            height: 70%;
+            max-height: 700px;
+            padding: 10px;
+        }
+
+        .overlay-buttonRow {
+            position: absolute;
+            height: 35px;
+            width: calc(100% - 20px);
+            bottom: 10px;
+        }
+
+        .card-button {
+            border-radius: 10px;
+            background-color: #47a3ff8c;
+            height: 30px;
+            text-align: center;
+            font-style: "Comic Sans MS";
+            line-height: 30px;
+            overflow: hidden;
+            border: solid;
+            border-width: 1px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            word-wrap: break-word;
+        }
+
+        .card-button:hover {
+            background-color: #3484d3df;
+            transition-duration: 0.1s;
+        }
+
+        .card-button:active {
+            background-color: #0b4d8fdf;
+            transform: translateY(4px);
+        }
+
+        .preview-button {
+            border-radius: 12.5px;
+            background-color: #47a3ff8c;
+            width: 45%;
+            height: 30px;
+            margin-left: 2.5%;
+            margin-right: 2.5%;
+            text-align: center;
+            font-style: "Comic Sans MS";
+            line-height: 30px;
+            overflow: hidden;
+            border: solid;
+            border-width: 1px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .preview-button:hover {
+            background-color: #3484d3df;
+            transition-duration: 0.1s;
+        }
+
+        .preview-button:active {
+            background-color: #0b4d8fdf;
+            transform: translateY(4px);
+        }
+
+        .overlay-box {
+            position: relative;
+            background-color: #bababa;
+            margin-top: 20px;
+            box-shadow: 2px 2px 4px 2px rgba(157, 156, 156, 0.488);
+            border-radius: 5px;
+            height: calc(100% - 40px);
+            width: calc(100% - 20px);
+            padding: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .overlay-ver {
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            width: fit-content;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            max-width: inherit;
+            margin-bottom: 10px;
+        }
+
+        .overlay-title {
+            position: absolute;
+            font-family: 'Kanit', sans-serif;
+            text-align: center;
+            left: inherit;
+            right: inherit;
+            top: inherit;
+            bottom: inherit;
+            padding: 5px;
+        }
+
+        .overlay-layoutTitle {
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            width: fit-content;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            max-width: inherit;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .overlay-desc {
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            width: fit-content;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            max-width: inherit;
+            margin-bottom: 10px;
+        }
+
+        .overlay-editKey {
+            margin-top: 10px;
+        }
+
+        .editContainer {
+            margin-top: 5px;
+            position: relative;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .editBox {
+            position: relative;
+            background-color: rgb(59, 59, 59);
+            color: #dedede;
+            border-radius: 5px;
+            padding: 5px;
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
+            overflow: hidden;
+            resize: none;
+        }
+
+        .editPencil {
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            z-index: 999;
+            right: 5px;
+            top: 5px;
+            filter: invert(99%) sepia(0%) saturate(16%) hue-rotate(134deg) brightness(90%) contrast(94%);
+        }
+
+        .screenshots {
+            list-style-type: circle;
+        }
+
+        .screenshots .li {
+            color: white;
+        }
+
+        .ss_button {
+            margin-top: 5px;
+            box-shadow: 2px 2px 4px 2px rgba(157, 156, 156, 0.488);
+            border-radius: 5px;
+            background-color: #dedede;
+            cursor: pointer;
+            width: fit-content;
+            height: fit-content;
+            padding: 5px;
+            padding-right: 10px;
+            padding-left: 10px;
+            text-align: center;
+            color: black;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+        }
+
+        .ss_button:hover {
+            background-color: #eeeeee;
+            transition-duration: 0.1s;
+        }
+
+        .ss_button:active {
+            background-color: #ffffff;
+            transform: translateY(4px);
+        }
 
     </style>
 </head>

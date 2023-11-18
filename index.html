@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
+    <script src="gtag.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caprasimo|Kanit:wght@300&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.js"></script>
@@ -23,6 +25,7 @@
             background-color: #dadada;
             margin-right: 30px;
             position: relative;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -330,10 +333,18 @@
             height: fit-content;
             width: fit-content;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
             max-width: inherit;
             margin-bottom: 10px;
+        }
+
+        .overlay-desc .long {
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+        }
+
+        .overlay-desc .short {
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
 
         .overlay-filePreview {
@@ -345,6 +356,13 @@
             font: 16px;
             overflow: auto;
             padding: 15px;
+        }
+
+        .overlay-ss_box {
+            position: relative;
+            max-height: 30%;
+            width: 100%;
+            overflow: hidden;
         }
 
         .loader-frame {
