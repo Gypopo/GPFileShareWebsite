@@ -278,15 +278,19 @@ export class API {
     }
   }
 
-  setOldCookie(cookie, value, expire) {
-    var expires = "expires=" + expire;
-    document.cookie = cookie + "=" + value + ";" + expires + ";path=/";
+  setOldCookie(cookie, value, remember, expire) {
+    if (remember) {
+      var expires = "expires=" + expire;
+      document.cookie = cookie + "=" + value + ";" + expires + ";path=/";
+    } else {
+      document.cookie = cookie + "=" + value + ";";
+    }
   }
 
   setRawCookie(cookie, value, expire) {
     var d = new Date();
     d.setTime(expire);
-    this.setOldCookie(cookie, value, d.toUTCString());
+    this.setOldCookie(cookie, value, expire != 0, d.toUTCString());
   }
 
   setExistingCookie(cookie, value) {
