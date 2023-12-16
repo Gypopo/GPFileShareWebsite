@@ -4,8 +4,9 @@ import { Author } from './objects/Author.js';
 
 export class CardHelper {
 
-    constructor(api) {
+    constructor(api, cards) {
         this.api = api;
+        this.cards = cards;
     }
 
     /**
@@ -338,13 +339,13 @@ export class CardHelper {
         box.className = 'overlay-box';
         box.innerHTML = '<pre style="max-height:545px;"><code class="language-yaml" id="yamlCode">' + payload + "</code></pre>";
 
-        var buttonRow = createPreviewButtonRow(layout);
+        var buttonRow = this.createPreviewButtonRow(layout);
         box.appendChild(buttonRow);
 
         content.appendChild(box);
 
         overlay.appendChild(content);
-        overlay.onclick = closeListener;
+        overlay.onclick = this.closeListener;
 
         document.body.appendChild(overlay);
 
@@ -371,14 +372,14 @@ export class CardHelper {
         var button2 = document.createElement('button');
         button2.className = 'preview-button';
         button2.innerHTML = '<- Back';
-        button2.onclick = function () {
+        button2.onclick = () => {
             var link = window.location.href.split('?')[0] + '?layout=' + layout;
             history.pushState(null, null, link);
 
             var overlay = document.getElementById('overlay');
             overlay.remove();
 
-            displayCard(layout, cards.get(layout));
+            this.displayCard(layout, this.cards.get(layout));
         }
         buttonRow.appendChild(button2);
 
@@ -398,19 +399,19 @@ export class CardHelper {
         button1.className = 'card-button';
         button1.style.marginRight = '5%';
         button1.innerHTML = 'Download';
-        button1.onclick = function () {
+        button1.onclick = () => {
             this.createDownloadDisclaimer();
 
             var confirm = document.getElementById('disclaimer-confimButton');
-            confirm.onclick = function () {
+            confirm.onclick = () => {
                 var overlay = document.getElementById('disclaimer-overlay');
                 overlay.remove();
 
-                var card = cards.get(layout);
-                api.getUserData().then(user => {
+                var card = this.cards.get(layout);
+                this.api.getUserData().then(user => {
                     if (!card.isPremium() || user) {
-                        startDownload();
-                        api.downloadLayout(layout, cards.get(layout)).catch();
+                        this.startDownload();
+                        this.api.downloadLayout(layout, card).catch();
                     } else
                         alert('You are not authorized to download this layout.');
                 });
