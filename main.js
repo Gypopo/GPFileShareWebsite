@@ -7,11 +7,13 @@ import { Cards } from './objects/Cards.js';
 import { Author } from './objects/Author.js';
 import { Searchbar } from './searchbar.js';
 import { NavBar } from './navbar.js';
+import { CardHelper } from './cardhelper.js';
 
 //console.log(apiCall());
 var cards = new Cards;
 var api = new API();
-var searchbar = new Searchbar();
+var cardhelper = new CardHelper(api);
+var searchbar = new Searchbar(cardhelper);
 var navBar = new NavBar(api);
 
 init();
@@ -46,7 +48,7 @@ function createPage(i) {
     cards.getPage(i, null).forEach((card, id) => {
         //console.log(id);
         //console.log(id);
-        page.appendChild(createCard(id, card));
+        page.appendChild(cardhelper.createCard(id, card));
     });
 
     return page;
@@ -101,13 +103,13 @@ async function completeLoading() {
 
                 if (!params.has("preview")) {
                     // Preview the card
-                    displayCard(id, card);
+                    cardhelper.displayCard(id, card);
                 } else {
                     // Preview the file
                     var file = params.get("preview");
                     if (card.getFiles().includes(file)) {
                         await api.previewFile(params.get("layout"), file).then(v => {
-                            previewFile(id, file, v);
+                            cardhelper.previewFile(id, file, v);
                         });
                     } else throw new Error('Cannot find file ' + file + ' inside layout ' + card);
                 }

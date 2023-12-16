@@ -3,15 +3,20 @@ import { Cards } from './objects/Cards.js';
 import { Author } from './objects/Author.js';
 
 export class CardHelper {
+
+    constructor(api) {
+        this.api = api;
+    }
+
     /**
      * @param {string} id
      * @param {Card} card 
      */
     createCard(id, card) {
         var div = document.createElement('div');
-        div.onclick = function () {
+        div.onclick = () => {
             history.pushState(null, null, window.location.href + "?layout=" + id);
-            displayCard(id, card);
+            this.displayCard(id, card);
         }
         div.className = 'card';
         div.id = id;
@@ -245,21 +250,21 @@ export class CardHelper {
         // Files
         var files = document.createElement('div');
         files.className = 'overlay-files';
-        files.innerHTML = getFiles(card);
+        files.innerHTML = this.getFiles(card);
         filesBox.append(files);
         box.appendChild(filesBox);
 
-        var buttonRow = createButtonRow(id);
+        var buttonRow = this.createButtonRow(id);
         box.appendChild(buttonRow);
 
         content.appendChild(box);
 
         overlay.appendChild(content);
-        overlay.onclick = closeListener;
+        overlay.onclick = this.closeListener;
 
         document.body.appendChild(overlay);
 
-        addFilePreviews(id, card);
+        this.addFilePreviews(id, card);
     }
 
     /**
@@ -271,7 +276,7 @@ export class CardHelper {
         var html = '';
         var files = card.getFiles();
         for (let i = 0; i < files.length; i++) {
-            html += '<a style="cursor: pointer;color:blue;text-decoration:underline;" id="previewFile=' + files.at(i) + '">' + files.at(i) + '</a>';
+            html += '<a style="cursor: pointer;color:#0040AE;" id="previewFile=' + files.at(i) + '"><b>' + files.at(i) + '</b></a>';
             if (i != files.length - 1) {
                 html += ' - ';
             }
@@ -288,8 +293,8 @@ export class CardHelper {
         var files = card.getFiles();
         for (let i = 0; i < files.length; i++) {
             var file = document.getElementById("previewFile=" + files.at(i));
-            file.addEventListener("click", function () {
-                fastPreview(layout, files.at(i));
+            file.addEventListener("click", () => {
+                this.fastPreview(layout, files.at(i));
             });
         }
     }
@@ -303,11 +308,11 @@ export class CardHelper {
         //window.location.href = link;
         history.pushState(null, null, link);
 
-        await api.previewFile(layout, file).then(v => {
+        await this.api.previewFile(layout, file).then(v => {
             var overlay = document.getElementById('overlay');
             overlay.remove();
 
-            previewFile(layout, file, v);
+            this.previewFile(layout, file, v);
         });
     }
 
@@ -359,7 +364,7 @@ export class CardHelper {
         button1.className = 'preview-button';
         button1.innerHTML = 'Download';
         button1.onclick = function () {
-
+            // Todo
         }
         buttonRow.appendChild(button1);
 
@@ -394,23 +399,46 @@ export class CardHelper {
         button1.style.marginRight = '5%';
         button1.innerHTML = 'Download';
         button1.onclick = function () {
-            startDownload();
-            api.downloadLayout(layout, cards.get(layout))
+            this.createDownloadDisclaimer();
+
+            var confirm = document.getElementById('disclaimer-confimButton');
+            confirm.onclick = function () {
+                var overlay = document.getElementById('disclaimer-overlay');
+                overlay.remove();
+
+                var card = cards.get(layout);
+                api.getUserData().then(user => {
+                    if (!card.isPremium() || user) {
+                        startDownload();
+                        api.downloadLayout(layout, cards.get(layout)).catch();
+                    } else
+                        alert('You are not authorized to download this layout.');
+                });
+            }
         }
         buttonRow.appendChild(button1);
 
         var button3 = document.createElement('button');
         button3.className = 'card-button';
+        button3.style.width = '40%';
         button3.style.marginRight = '5%';
         button3.innerHTML = 'Get install command';
-        button3.onclick = function () {
+        button3.onclick = () => {
+            this.createDownloadDisclaimer();
 
+            var confirm = document.getElementById('disclaimer-confimButton');
+            confirm.onclick = () => {
+                var overlay = document.getElementById('disclaimer-overlay');
+                overlay.remove();
+
+                this.createInstallCommandOverlay(layout);
+            }
         }
         buttonRow.appendChild(button3);
 
         var button2 = document.createElement('button');
         button2.className = 'card-button';
-        button2.innerHTML = '<- Back';
+        button2.innerHTML = 'Close';
         button2.onclick = function () {
             var link = window.location.href.split('?')[0];
             history.pushState(null, null, link);
@@ -421,6 +449,91 @@ export class CardHelper {
         buttonRow.appendChild(button2);
 
         return buttonRow;
+    }
+
+    createDownloadDisclaimer() {
+        var overlay = document.createElement('div');
+        overlay.className = 'disclaimer-overlay';
+        overlay.id = 'disclaimer-overlay';
+        overlay.onclick = function (e) {
+            if (e.target == overlay) {
+                document.body.removeChild(overlay);
+                history.pushState(null, null, "/");
+            }
+        }
+
+        var content = document.createElement('div');
+        content.className = 'disclaimer-content';
+
+        var title = document.createElement('div');
+        title.innerHTML = 'Disclaimer:';
+        title.className = 'disclaimer-title';
+        content.appendChild(title);
+
+        var box = document.createElement('div');
+        box.className = 'disclaimer-box';
+        content.appendChild(box);
+
+        var disclaimerDescription = document.createElement('span');
+        disclaimerDescription.innerHTML = 'All layouts on this site are created/uploaded by comminity members<br>and may not be validated by our staff.<br><br>\
+    Altough all layouts get scanned for malicious content upon uploading it to this site,<br>it is recommended to validate the installed layout manually for exploitable/unfair prices before using it on your server.';
+        box.appendChild(disclaimerDescription);
+
+        var button1 = document.createElement('div');
+        button1.className = 'disclaimer-confimButton';
+        button1.id = 'disclaimer-confimButton';
+        button1.innerHTML = 'I agree';
+        box.appendChild(button1);
+
+        overlay.appendChild(content);
+
+        document.body.appendChild(overlay);
+    }
+
+    createInstallCommandOverlay(id) {
+        var overlay = document.createElement('div');
+        overlay.className = 'installCommand-overlay';
+        overlay.id = 'installCommand-overlay';
+        overlay.onclick = function (e) {
+            if (e.target == overlay) {
+                document.body.removeChild(overlay);
+                history.pushState(null, null, "/");
+            }
+        }
+
+        var content = document.createElement('div');
+        content.className = 'installCommand-content';
+
+        var title = document.createElement('div');
+        title.innerHTML = 'Install command:';
+        title.className = 'installCommand-title';
+        content.appendChild(title);
+
+        var box = document.createElement('div');
+        box.className = 'installCommand-box';
+        content.appendChild(box);
+
+        var disclaimerDescription = document.createElement('span');
+        disclaimerDescription.style.textAlign = 'center';
+        disclaimerDescription.innerHTML = 'Use the following command on your server to install this layout';
+        box.appendChild(disclaimerDescription);
+
+        var cmd = '/eshop installLayout ' + id;
+        var command = document.createElement('div');
+        command.className = 'installCommand-command';
+        command.title = 'Click to copy';
+        command.innerHTML = '<b>' + cmd + '</b>';
+        command.onclick = function () {
+            navigator.clipboard.writeText(cmd).then(
+                function () {
+                    alert("Successfully copied command to clipboard");
+                }).catch(function () { alert("Failed to copy command to clipboard"); });
+        }
+        box.appendChild(command);
+
+        overlay.appendChild(content);
+
+        document.body.appendChild(overlay);
     }
 
     startDownload() {
@@ -436,5 +549,14 @@ export class CardHelper {
         overlay.appendChild(content);
 
         document.body.appendChild(overlay);
+    }
+
+    closeListener(e) {
+        var overlay = document.getElementById('overlay');
+
+        if (e.target == overlay) {
+            document.body.removeChild(overlay);
+            history.pushState(null, null, "/");
+        }
     }
 }
