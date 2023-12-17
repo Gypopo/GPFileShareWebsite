@@ -265,6 +265,8 @@ export class CardHelper {
 
         document.body.appendChild(overlay);
 
+        this.setView(content);
+
         this.addFilePreviews(id, card);
     }
 
@@ -348,6 +350,8 @@ export class CardHelper {
         overlay.onclick = this.closeListener;
 
         document.body.appendChild(overlay);
+
+        this.setView(content);
 
         Prism.highlightAll();
     }
@@ -489,6 +493,8 @@ export class CardHelper {
         overlay.appendChild(content);
 
         document.body.appendChild(overlay);
+
+        this.setView(content);
     }
 
     createInstallCommandOverlay(id) {
@@ -535,6 +541,8 @@ export class CardHelper {
         overlay.appendChild(content);
 
         document.body.appendChild(overlay);
+
+        this.setView(content);
     }
 
     startDownload() {
@@ -550,6 +558,9 @@ export class CardHelper {
         overlay.appendChild(content);
 
         document.body.appendChild(overlay);
+
+        var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        content.style.top = scrollPosition + 'px';
     }
 
     closeListener(e) {
@@ -559,5 +570,12 @@ export class CardHelper {
             document.body.removeChild(overlay);
             history.pushState(null, null, "/");
         }
+    }
+
+    // Displays the div at the current scrollheight so the user can see it
+    setView(div) {
+        var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        var pos = (window.innerHeight - div.offsetHeight)/2 + scrollPosition;
+        div.style.top = pos + 'px';
     }
 }
