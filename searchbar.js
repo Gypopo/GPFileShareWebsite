@@ -4,8 +4,6 @@ import { User } from './objects/User.js';
 import { Author } from './objects/Author.js';
 import { CardHelper } from './cardhelper.js';
 
-var cardhelper = new CardHelper();
-
 export class Searchbar {
 
     // Some example tags the user can toggle to filter
@@ -19,7 +17,8 @@ export class Searchbar {
     searchInput = document.getElementById('sidebarSearch');
     filters = document.getElementById('sidebarFilters');
 
-    constructor() {
+    constructor(cardhelper) {
+        this.cardhelper = cardhelper;
     }
 
     /**
@@ -63,7 +62,7 @@ export class Searchbar {
 
         // Display the results
         results.forEach(([id, card]) => {
-            searchResult.appendChild(cardhelper.createCard(id, card));
+            searchResult.appendChild(this.cardhelper.createCard(id, card));
         });
     }
 

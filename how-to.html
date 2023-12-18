@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
+    <script src="gtag.js"></script>
+    <title>How it works</title>
+    <link rel="icon" type="image/x-icon" href="pics/Logo_GP5.0 no background.png">
+    <link rel="stylesheet" href="css/nav.css">
+    <style>
+        body {
+                height: 100%;
+                width: 100%;
+                margin: 0%;
+            }
+    
+        .content {
+            margin: 5%;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+        }
+    
+        .disclaimer {
+            position: relative;
+            border-radius: 5px;
+            background-color: #3d3d3d;
+            padding: 10px;
+            padding-left: 40px;
+            padding-right: 20px;
+            color: white;
+            border-left: solid rgb(0, 174, 0);
+            border-left-width: 5px;
+        }
+    
+        .disclaimer-img {
+            position: absolute;
+            height: 20px;
+            left: 10px;
+            top: 15px;
+        }
+    
+        .info {
+            position: relative;
+            border-radius: 5px;
+            background-color: #3d3d3d;
+            padding: 10px;
+            padding-left: 40px;
+            padding-right: 20px;
+            color: white;
+            border-left: solid #0077FF;
+            border-left-width: 5px;
+        }
+    
+        .info-img {
+            position: absolute;
+            height: 20px;
+            left: 10px;
+            top: 8px;
+        }
+    </style>
+</head>
+
+<!-- https://startbootstrap.com/snippets/navbar-logo-->
+<nav class="navbar navbar-expand-lg navbar-dark static-top" id="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="pics/Logo_GP5.0 no background.png" alt="..." height="64">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto" id="navBar">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="index.html">Layouts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">How it works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://discord.gpplugins.com">Discord</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">Spigot</a>
+                </li>
+                <li class="nav-item" id="account">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body style="background-color:#252525">
+    <div class="content">
+        <h4>
+            <b>What is this site for?</b>
+        </h4>    
+        This site is a community marketplace which hosts custom/premade shop layouts made for <a href="https://www.spigotmc.org/resources/economyshopgui.69927/" target="_blank">EconomyShopGUI</a> or <a href="https://www.spigotmc.org/resources/economyshopgui-premium.104414/" target="_blank">EconomyShopGUI Premium</a> created by community members
+        <br>
+        For two main reasons we've made this marketplace:
+        <br>
+        <br>
+        <ul>
+            <li>
+                Reason one being so other people can easily find, download and install premade shop layouts so they can start within seconds
+            </li>
+            <li>
+                Reason two being that this marketplace will give inspiration to new server owners and get them started quickly creating their own server shop
+            </li>
+        </ul>
+        We hope that after a while this marketplace will be filled using lots of premade/custom shop layouts
+        <br>
+        <br>
+        <h4>
+            <b>How to upload and download premade shop layouts for EconomyShopGUI</b>
+        </h4>
+        <br>
+        <div class="disclaimer">
+            <img src="pics/verified-author.svg" class="disclaimer-img">
+            Note that uploading/downloading layouts to/from this site requires atleast EconomyShopGUI v6.2.0 or EconomyShopGUI Premium v5.4.0.
+            <br>
+            Make sure you are up-to-date!
+        </div>
+        <br>
+        <br>
+        <h5><b>Uploading custom layouts</b></h5>
+        Using 4 simple steps you can upload a premade layout, for anyone to download or get inspiration from.
+        <br>
+        <br>
+        <ul>
+            <li>
+                Use the <u>/eshop uploadLayout</u> command to start the upload process of your layout
+            </li>
+            <li>
+                Enter a layout title, description and tags when asked in chat
+            </li>
+            <li>
+                Next a GUI will open where you will be asked to select the shop layouts to upload
+                <ul>
+                    <li>
+                        Optionally the config.yml can be uploaded if transaction/option items, navigation bars or display lore layout has been modified and is apart of this shop layout
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Finally choose a upload method: <b>Discord</b> or <b>Temporarily</b>
+            </li>
+        </ul>
+        When completed the steps above, you will need to wait till your layout gets accepted by our server.
+        <br>
+        <br>
+        <br>
+        <h5><b>Installing premade layouts</b></h5>
+        Installing premade layouts is as simple as executing 1 command
+        <br>
+        <br>
+        <ul>
+            <li>
+                Use the <u>/eshop installLayout [layoutID]</u> command to start the install process of your layout
+            </li>
+            <ul>
+                <li>
+                    Replacing <u>[layoutID]</u> with the layout specific ID
+                </li>
+            </ul>
+            <li>
+                After the installation proceeds, the changes can be reloaded using <b>/sreload</b>(Note that we recommend a server restart for layouts using a config.yml)
+            </li>
+        </ul>
+        <div class="info">
+            <img src="pics/info-250.png" class="info-img">
+            The install command can quickly be located by clicking any layout on the <a href="index.html">layouts page</a> > Get install command > Click the command to copy
+        </div>
+        <br>
+        <br>
+        <h5><b>Differences between upload methods:</b></h5>
+        There are two different ways for upload layouts, anonymously or using Discord authentication.
+        <br>
+        <br>
+        <ul>
+            <li>
+                <b>Temporarily</b> upload makes it so you can upload layouts anonymously, but will be removed after 14 days
+            </li>
+            <li>
+                <b>Discord</b> authentication makes it possible to edit/remove your uploaded layouts at any later point when logged in thru discord on the <a href="account.html">My Layouts</a> page
+            </li>
+            <ul>
+                <li>
+                    Layouts uploaded using Discord authentication will stay permanently available to download
+                </li>
+            </ul>
+        </ul>
+        <script type="module">
+            import { API } from './api.js';
+            import { NavBar } from './navbar.js';
+
+            var api = new API();
+            var navBar = new NavBar(api);
+        </script>
+        <script type="text/javascript" src="nav.js"></script>
+    </div>
+</body>
+</html>
