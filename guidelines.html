@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
+    <script src="gtag.js"></script>
+    <title>How it works</title>
+    <link rel="icon" type="image/x-icon" href="pics/Logo_GP5.0 no background.png">
+    <link rel="stylesheet" href="css/nav.css">
+    <style>
+        body {
+                height: 100%;
+                width: 100%;
+                margin: 0%;
+                min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            }
+    
+        .content {
+            margin: 5%;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+        }
+    
+        .disclaimer {
+            position: relative;
+            border-radius: 5px;
+            background-color: #3d3d3d;
+            padding: 10px;
+            padding-left: 40px;
+            padding-right: 20px;
+            color: white;
+            border-left: solid rgb(255, 153, 0);
+            border-left-width: 5px;
+        }
+    
+        .disclaimer-img {
+            position: absolute;
+            height: 20px;
+            left: 10px;
+            top: 10px;
+        }
+
+        .footerLinks {
+            display: inline-grid;
+            grid-auto-flow: row;
+            grid-gap: 24px;
+            justify-items: center;
+            margin: auto;
+            list-style-type: none;
+            height: 100%;
+            grid-auto-rows: 100%;
+        }
+
+        @media (min-width: 500px) {
+            .footerLinks {
+                grid-auto-flow: column;
+            }
+        }
+
+        .footerLink {
+            color: white;
+            text-decoration: none;
+            box-shadow: inset 0 -1px 0 hsla(0, 0%, 100%, 0.4);
+        }
+
+        .footerLink:hover {
+            box-shadow: inset 0 -1.2em 0 hsla(0, 0%, 100%, 0.4);
+        }
+
+        .footerEle:last-child {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
+
+        .footer {
+            display: flex;
+            height: 80px;
+            width: 100%;
+            background-color: #4a5050;
+            line-height: 5;
+            font-family: Menlo, monospace;
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<!-- https://startbootstrap.com/snippets/navbar-logo-->
+<nav class="navbar navbar-expand-lg navbar-dark static-top" id="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="pics/Logo_GP5.0 no background.png" alt="..." height="64">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto" id="navBar">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="index.html">Layouts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="how-to.html">How it works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Guidelines</a>
+                </li>
+                <li class="nav-item" id="account">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body style="background-color:#252525">
+    <div class="content">
+        <h4>
+            <b>Resource guidelines:</b>
+        </h4>    
+        Uploaded layouts should follow the following guidelines, to keep this Marketplace a safe/clean place for our community to browse and upload new layouts:
+        <br>
+        <br>
+        <ul>
+            <li>
+                Layouts descriptions/names should be in Enlgish
+            </li>
+            <li>
+                Descriptive resource titles/descriptions, anyone should be able to understand what your custom shop layout is on about
+            </li>
+            <li>
+                Layouts should not contain any malicious files, or content
+                <ul>
+                    <li>
+                        Uploading malicious files could cause your IP to be banned for uploading/downloading any new layout
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Layouts should not be of low quality, meaning:
+                <ul>
+                    <li>
+                        Only contains a small amount of config files
+                    </li>
+                    <li>
+                        Only contains a small amount of shop items
+                    </li>
+                    <li>
+                        Layouts should not contain config files of the default layout, unless:
+                        <ul>
+                            <li>
+                                It is apart of a custom layout
+                            </li>
+                            <li>
+                                The config file has been edited/contains items which are not included in the default file
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="disclaimer">
+            <img src="pics/exclamation-mark.svg" class="disclaimer-img">
+            If your layout does not abide the above guidelines, we have all rights to remove your layout from this site without notice
+        </div>
+        <script type="module">
+            import { API } from './api.js';
+            import { NavBar } from './navbar.js';
+
+            var api = new API();
+            var navBar = new NavBar(api);
+        </script>
+        <script type="text/javascript" src="nav.js"></script>
+    </div>
+
+    <div class="footer">
+        <ul class="footerLinks">
+            <li class="footerEle"><a class="footerLink" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">SpigotMC</a></li>
+            <li class="footerEle"><a class="footerLink" href="https://github.com/Gypopo/GPFileShareWebsite">Github</a></li>
+            <li class="footerEle">
+                <p style="color: #fff;"> || &nbsp; © GPPlugins 2023 All rights reserved</p>
+            </li>
+            <li class="footerEle"><a class="footerLink" href="https://discord.gpplugins.com">Discord</a></li>
+        </ul>
+    </div>
+</body>
+</html>

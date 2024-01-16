@@ -62,6 +62,47 @@
             left: 10px;
             top: 8px;
         }
+
+        .footerLinks {
+            display: inline-grid;
+            grid-auto-flow: row;
+            grid-gap: 24px;
+            justify-items: center;
+            margin: auto;
+            list-style-type: none;
+            height: 100%;
+            grid-auto-rows: 100%;
+        }
+
+        @media (min-width: 500px) {
+            .footerLinks {
+                grid-auto-flow: column;
+            }
+        }
+
+        .footerLink {
+            color: white;
+            text-decoration: none;
+            box-shadow: inset 0 -1px 0 hsla(0, 0%, 100%, 0.4);
+        }
+
+        .footerLink:hover {
+            box-shadow: inset 0 -1.2em 0 hsla(0, 0%, 100%, 0.4);
+        }
+
+        .footerEle:last-child {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
+
+        .footer {
+            display: flex;
+            height: 80px;
+            width: 100%;
+            background-color: #4a5050;
+            line-height: 5;
+            font-family: Menlo, monospace;
+        }
     </style>
 </head>
 
@@ -84,10 +125,7 @@
                     <a class="nav-link active" href="#">How it works</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://discord.gpplugins.com">Discord</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">Spigot</a>
+                    <a class="nav-link" href="guidelines.html">Guidelines</a>
                 </li>
                 <li class="nav-item" id="account">
                     <a class="nav-link" href="login.html">Login</a>
@@ -205,6 +243,17 @@
             var navBar = new NavBar(api);
         </script>
         <script type="text/javascript" src="nav.js"></script>
+    </div>
+
+    <div class="footer">
+        <ul class="footerLinks">
+            <li class="footerEle"><a class="footerLink" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">SpigotMC</a></li>
+            <li class="footerEle"><a class="footerLink" href="https://github.com/Gypopo/GPFileShareWebsite">Github</a></li>
+            <li class="footerEle">
+                <p style="color: #fff;"> || &nbsp; © GPPlugins 2023 All rights reserved</p>
+            </li>
+            <li class="footerEle"><a class="footerLink" href="https://discord.gpplugins.com">Discord</a></li>
+        </ul>
     </div>
 </body>
 </html>

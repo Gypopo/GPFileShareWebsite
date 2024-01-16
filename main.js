@@ -75,7 +75,7 @@ function setLoading() {
     loader.className = 'loader';
 
     loaderFrame.appendChild(loader);
-    document.body.appendChild(loaderFrame);
+    document.getElementById('pages').appendChild(loaderFrame);
     loading = true;
 }
 
