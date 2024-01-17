@@ -83,7 +83,7 @@ async function completeLoading() {
     var page = createPage(1);
 
     var loader = document.getElementById('loader')
-    document.body.removeChild(loader);
+    loader.remove();
 
     pages.appendChild(page);
 
