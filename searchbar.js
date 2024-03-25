@@ -46,10 +46,10 @@ export class Searchbar {
 
         var results = Array.from(this.cards.getAll());
 
-        // Search using title param
+        // Search using title/author param
         if (searchText) {
             var results = results.filter(function ([id, card]) {
-                return card.getTitle().toLowerCase().includes(searchText);
+                return card.getTitle().toLowerCase().includes(searchText) || card.getAuthor().getAuthor().toLowerCase().includes(searchText);
             });
         }
 

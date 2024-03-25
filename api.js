@@ -421,5 +421,5 @@ export class API {
     }
   }
 
-  API_URL = 'http://192.168.55.170:3333/api/'/*'https://api.gpplugins.com:2096/val/'*/;
+  API_URL = /*'http://192.168.55.170:3333/api/'*/'https://api.gpplugins.com:2096/val/';
 }
