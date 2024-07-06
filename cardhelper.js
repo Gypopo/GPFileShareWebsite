@@ -287,13 +287,13 @@ export class CardHelper {
     }
 
     async displaySSPreview(id) {
-        var urls = await this.api.getLayoutScreenshots(id);
-        for (var url of urls) {
+        var files = await this.api.getLayoutScreenshots(id);
+        for (var file of files) {
             const img = document.createElement('img');
-            img.src = url;
+            img.src = file.url;
             img.height = 100;
             img.addEventListener("click", () => {
-                this.displayImageGalary(urls, 0);
+                this.displayImageGalary(files, 0);
             });
             document.getElementById('ss-preview').appendChild(img);
         }
@@ -301,9 +301,9 @@ export class CardHelper {
 
     /**
      * 
-     * @param {Array<string>} urls 
+     * @param {Array<SimpleFile>} files 
      */
-    displayImageGalary(urls, index) {
+    displayImageGalary(files, index) {
         var galary = document.createElement('div');
         galary.className = 'overlay-galary';
         galary.id = 'overlay-galary';
@@ -317,10 +317,10 @@ export class CardHelper {
         var space = Math.max(5, Math.min(40, imgSize*5));
         console.log(imgSize*90);
 
-        if (urls.length > 1) {
+        if (files.length > 1) {
             var prevIndex = index - 1;
             if (prevIndex < 0)
-                prevIndex = urls.length-1;
+                prevIndex = files.length-1;
 
             // Display previous screenshot as thumbnail
             var thumbnailBoxPrev = document.createElement('div');
@@ -328,7 +328,7 @@ export class CardHelper {
                 var galary = document.getElementById("overlay-galary");
                 if (galary != null)
                     galary.remove();
-                this.displayImageGalary(urls, prevIndex);
+                this.displayImageGalary(files, prevIndex);
             });
             thumbnailBoxPrev.className = 'overlay-ssTumbnail';
             thumbnailBoxPrev.style.height = imgSize*25 + 'px';
@@ -342,7 +342,7 @@ export class CardHelper {
             var thumbnailPrev = document.createElement('img');
             thumbnailPrev.style.top = '50%';
             thumbnailPrev.style.transform = 'translateY(-50%)';
-            thumbnailPrev.src = urls.at(prevIndex);
+            thumbnailPrev.src = files.at(prevIndex).url;
             thumbnailPrev.style.width = '100%';
             thumbnailPrev.alt = 'ss' + prevIndex;
             thumbnailPrev.style.position = 'relative';
@@ -361,7 +361,7 @@ export class CardHelper {
 
         var mainIMG = document.createElement('img');
         mainIMG.id = 'mainIMG';
-        mainIMG.src = urls.at(index);
+        mainIMG.src = files.at(index).url;
         mainIMG.alt = 'ss' + index;
         mainIMG.style.top = '50%';
         mainIMG.style.transform = 'translateY(-50%)';
@@ -373,9 +373,9 @@ export class CardHelper {
         var thumbnails = document.createElement('div');
         thumbnails.className = 'overlay-ssTumbnails';
 
-        if (urls.length > 1) { // If there are more screenshots
+        if (files.length > 1) { // If there are more screenshots
             var nextIndex = index + 1;
-            if (nextIndex == urls.length)
+            if (nextIndex == files.length)
                 nextIndex = 0;
 
             // Display next screenshot as thumbnail
@@ -384,7 +384,7 @@ export class CardHelper {
                 var galary = document.getElementById("overlay-galary");
                 if (galary != null)
                     galary.remove();
-                this.displayImageGalary(urls, nextIndex);
+                this.displayImageGalary(files, nextIndex);
             });
             thumbnailBoxNext.className = 'overlay-ssTumbnail';
             thumbnailBoxNext.style.height = imgSize*25 + 'px';
@@ -397,7 +397,7 @@ export class CardHelper {
             var thumbnailNext = document.createElement('img');
             thumbnailNext.style.top = '50%';
             thumbnailNext.style.transform = 'translateY(-50%)';
-            thumbnailNext.src = urls.at(nextIndex);
+            thumbnailNext.src = files.at(nextIndex).url;
             thumbnailNext.style.width = '100%';
             thumbnailNext.alt = 'ss' + nextIndex;
             thumbnailNext.style.position = 'relative';

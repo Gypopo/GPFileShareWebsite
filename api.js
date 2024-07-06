@@ -1,6 +1,7 @@
 import { Card } from './objects/Card.js';
 import { User } from './objects/User.js';
 import { Author } from './objects/Author.js';
+import { SimpleFile } from './objects/SimpleFile.js';
 
 export class API {
 
@@ -112,20 +113,21 @@ export class API {
   handleMultipartResponse(data) {
     const boundary = "--boundary";
     const parts = data.split(boundary);
-    var urls = [];
+    var files = [];
   
     parts.forEach(part => {
       if (part.includes("Content-Type: image/png")) {
-        const base64String = part.split("\r\n\r\n")[1].trim(); // Trim to remove extra new lines
-        urls.push(this.convertBase64ToURL(base64String));
+        console.log(part.split("\r\n\r\n")[1].trim());
+        var json = JSON.parse(part.split("\r\n\r\n")[1].trim()); // Trim to remove extra new lines
+        files.push(this.getFileFromJson(json));
       }
     });
 
-    return urls;
+    return files;
   }
 
-  convertBase64ToURL(base64) {
-    const byteCharacters = atob(base64);
+  getFileFromJson(json) {
+    const byteCharacters = atob(json.bytes);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -134,7 +136,7 @@ export class API {
     const blob = new Blob([byteArray], {type: 'image/png'});
   
     var url = URL.createObjectURL(blob);
-    return url;
+    return new SimpleFile(json.fileName, url);
   }
 
   /**
