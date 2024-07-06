@@ -235,7 +235,7 @@ function addEditBox(key, value) {
         editBox.maxLength = 128;
         editBox.style.maxHeight = '100px';
         var lines = value.split(/\r|\r\n|\n/);
-        editBox.style.height = (lines.length != 1 ? ((lines.length - 1) * 18) + 28 : 30) + 'px';
+        editBox.style.height = (lines.length+1 != 1 ? ((lines.length+1 - 1) * 18) + 28 : 30) + 'px';
         editBox.onkeydown = function (e) {
             var box = document.getElementById('editBox_desc');
             if (box.style.height.replace('px', '') >= 100 && e.code === 'Enter') {
