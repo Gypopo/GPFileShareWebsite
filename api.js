@@ -98,6 +98,45 @@ export class API {
     return response.ok;
   }
 
+  async getLayoutScreenshots(layout) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'getScreenshots?layout=' + layout, {
+      method: 'GET',
+      timeout: 15000,
+      headers: this.form(),
+    });
+
+    const text = await response.text();
+    return this.handleMultipartResponse(text);
+  }
+
+  handleMultipartResponse(data) {
+    const boundary = "--boundary";
+    const parts = data.split(boundary);
+    var urls = [];
+  
+    parts.forEach(part => {
+      if (part.includes("Content-Type: image/png")) {
+        const base64String = part.split("\r\n\r\n")[1].trim(); // Trim to remove extra new lines
+        urls.push(this.convertBase64ToURL(base64String));
+      }
+    });
+
+    return urls;
+  }
+
+  convertBase64ToURL(base64) {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], {type: 'image/png'});
+  
+    var url = URL.createObjectURL(blob);
+    return url;
+  }
+
   /**
    * @param {string} layout
    * @param {File} screenshot
@@ -421,5 +460,5 @@ export class API {
     }
   }
 
-  API_URL = /*'http://192.168.55.170:3333/api/'*/'https://api.gpplugins.com:2096/val/';
+  API_URL = 'http://127.0.0.1:8085/val/'/*'https://api.gpplugins.com:2096/val/'*/;
 }
