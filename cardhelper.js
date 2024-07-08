@@ -248,7 +248,7 @@ export class CardHelper {
         // SS count
         var screenshotCount = document.createElement('div');
         screenshotCount.className = 'overlay-screenshotCount';
-        screenshotCount.innerHTML = '<b>Screenshots: </b>' + ' 5 ' + '<img src="pics/pop-out.svg" height="24" title="Click to view"></img>';
+        screenshotCount.innerHTML = '<b>Screenshots: </b>' + card.getScreenshots() + '<img src="pics/pop-out.svg" height="24" title="Click to view"></img>';
         box.appendChild(screenshotCount);
 
         // SS Preview
