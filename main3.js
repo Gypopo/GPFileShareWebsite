@@ -1,6 +1,7 @@
 import { API } from './api.js';
 import { User } from './objects/User.js';
 import { NavBar } from './navbar.js';
+import { RawFile } from './objects/RawFile.js';
 
 var api = new API();
 var navBar = new NavBar(api);
@@ -129,8 +130,7 @@ function displayCard(id, card) {
     box.appendChild(desc);
     box.appendChild(addEditBox('desc', card.getDescription()));
 
-    // Add later, CDN?
-    /*
+    // CDN?
     // Screenshots
     var screenshots = document.createElement('label');
     screenshots.htmlFor = 'editBox_screenshots';
@@ -139,15 +139,11 @@ function displayCard(id, card) {
     box.appendChild(screenshots);
 
     var currentSS = document.createElement('ul');
-    currentSS.className = 'screenshots'
-    var ssElement = document.createElement('li');
-    var ss = document.createElement('a');
-    ss.innerText = 'screenshot-1.jpg';
-    ss.href = '#';
-    ss.style.color = 'white';
-    ssElement.append(ss);
-    currentSS.appendChild(ssElement);
+    currentSS.className = 'screenshots';
+    currentSS.id = 'currentSS';
     box.appendChild(currentSS);
+
+    addCurrentSS(id);
 
     //var ssAddBoxLabel = document.createElement('label');
     //ssAddBoxLabel.htmlFor = 'ss_input';
@@ -159,23 +155,42 @@ function displayCard(id, card) {
     ssAddInput.id = 'ss_input';
     ssAddInput.accept = 'image/*';
     ssAddInput.style.display = 'none';
+    ssAddInput.setAttribute('multiple', '');
     ssAddInput.onchange = function (e) {
         var files = e.target.files;
-
-        console.log(files[0].name);
         var allowedTypes = ['image/jpg', 'image/png'];
+        var rawFiles = [];
 
         for (var file of files) {
             if (!allowedTypes.includes(file.type)) {
                 alert('❌ File ' + file.name + ' could not be uploaded. Only images with the following types are allowed: JPG, PNG.');
                 return;
             }
+
+            if (file.size >= 10485760) {
+                alert('❌ File ' + file.name + ' could not be uploaded. File is to large, maximum file size is 10MB!');
+                return;
+            }
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var arrayBuffer = event.target.result;
+                var byteArray = new Uint8Array(arrayBuffer);
+
+                var blob = new Blob([byteArray], { type: file.type });
+                rawFiles.push(new RawFile(file.name, byteArray));
+
+                addUploaded(file.name, URL.createObjectURL(blob));
+            };
+
+            reader.onerror = function (event) {
+                alert('❌ File ' + file.name + ' could not be uploaded. File could not be read');
+                console.error('File ' + file.name + ' could not be read! Code ' + event.target.error.code);
+                return;
+            };
+
+            reader.readAsArrayBuffer(file);
         }
-        var selectedSS = document.createElement('label');
-        selectedSS.innerHTML = files[0].name;
-        selectedSS.htmlFor = 'ss_button';
-        selectedSS.style.marginTop = '5px';
-        document.getElementById('overlay-box').appendChild(selectedSS);
     }
 
     var ssAddButton = document.createElement('div');
@@ -189,7 +204,11 @@ function displayCard(id, card) {
 
     ssAddButton.appendChild(ssAddInput);
     box.appendChild(ssAddButton);
-    */
+
+    var uploaded = document.createElement('ul');
+    uploaded.className = 'screenshots';
+    uploaded.id = 'uploaded';
+    box.appendChild(uploaded);
 
     var buttonRow = createButtonRow(id, card);
     box.appendChild(buttonRow);
@@ -202,6 +221,33 @@ function displayCard(id, card) {
 
     //addFilePreviews(id, card);
     // Todo: Allow to remove files from layouts?
+}
+
+function addUploaded(name, url) {
+    var uploaded = document.getElementById('uploaded');
+
+    var ssElement = document.createElement('li');
+    var ss = document.createElement('a');
+    ss.innerText = name;
+    ss.href = url;
+    ss.target = '_blank';
+    ssElement.append(ss);
+    uploaded.appendChild(ssElement);
+}
+
+async function addCurrentSS(id) {
+    var files = await api.getLayoutScreenshots(id);
+    var currentSS = document.getElementById('currentSS');
+    for (var file of files) {
+        var ssElement = document.createElement('li');
+        var ss = document.createElement('a');
+        ss.innerText = file.fileName;
+        ss.href = file.url;
+        ss.target = '_blank';
+        ss.style.color = 'white';
+        ssElement.append(ss);
+        currentSS.appendChild(ssElement);
+    }
 }
 
 var mcVersions = [1.20, 1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10, 1.9, 1.8]
@@ -235,7 +281,7 @@ function addEditBox(key, value) {
         editBox.maxLength = 128;
         editBox.style.maxHeight = '100px';
         var lines = value.split(/\r|\r\n|\n/);
-        editBox.style.height = (lines.length+1 != 1 ? ((lines.length+1 - 1) * 18) + 28 : 30) + 'px';
+        editBox.style.height = (lines.length + 1 != 1 ? ((lines.length + 1 - 1) * 18) + 28 : 30) + 'px';
         editBox.onkeydown = function (e) {
             var box = document.getElementById('editBox_desc');
             if (box.style.height.replace('px', '') >= 100 && e.code === 'Enter') {
@@ -278,15 +324,15 @@ function createButtonRow(layout, card) {
             alert('Failed to save this card');
         });
 
-        /*
-        // Add later, CDN?
+        // CDN?
         var files = document.getElementById('ss_input').files;
         if (files.length != 0) {
-        api.uploadScreenshot(layout, files[0], files[0].type).then(function(status) {
-
-        });
-    }
-    */
+            api.uploadScreenshots(layout, files, files[0].type).then(function (status) {
+                if (!status) {
+                    alert('Failed to upload screenshots');
+                }
+            });
+        }
     }
     buttonRow.appendChild(button1);
 
@@ -296,7 +342,7 @@ function createButtonRow(layout, card) {
     button3.style.marginRight = '5%';
     button3.innerHTML = 'Delete layout';
     button3.onclick = function () {
-        api.deleteLayout(layout).then(function() {
+        api.deleteLayout(layout).then(function () {
             var overlay = document.getElementById('overlay');
             overlay.remove();
         });
@@ -331,6 +377,9 @@ function saveCard(card) {
 
     card.title = title;
     card.description = desc;
+
+    var uploadedSS = document.getElementById('ss_input').files.length;
+    card.screenshots = card.screenshots + uploadedSS;
 
     return card;
 }
