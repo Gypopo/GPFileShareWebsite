@@ -283,7 +283,8 @@ export class CardHelper {
 
         this.addFilePreviews(id, card);
 
-        this.displaySSPreview(id);
+        if (card.getScreenshots() > 0)
+            this.displaySSPreview(id);
     }
 
     async displaySSPreview(id) {
