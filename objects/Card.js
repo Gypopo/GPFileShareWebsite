@@ -79,6 +79,13 @@ export class Card {
     }
 
     /**
+     * @returns {number}
+     */
+    getScreenshots() {
+        return this.screenshots;
+    }
+
+    /**
      * @returns {Array<string>}
      */
     getFiles() {

@@ -36,7 +36,7 @@ function listen() {
 
 function login(token, remember) {
     api.setCookie('token', token, false);
-    var url = "http://192.168.55.170:3333/api/authorize?login=true&remember=" + remember + "&token=" + token;
+    var url = api.API_URL + "authorize?login=true&remember=" + remember + "&token=" + token;
     var element = document.createElement('a');
     element.style.display = 'none';
     element.href = url;

@@ -1,6 +1,7 @@
 import { Card } from './objects/Card.js';
 import { User } from './objects/User.js';
 import { Author } from './objects/Author.js';
+import { SimpleFile } from './objects/SimpleFile.js';
 
 export class API {
 
@@ -98,24 +99,128 @@ export class API {
     return response.ok;
   }
 
+  async getLayoutScreenshots(layout) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'getScreenshots?layout=' + layout, {
+      method: 'GET',
+      timeout: 15000,
+      headers: this.form(),
+    });
+
+    const text = await response.text();
+    return this.handleMultipartResponse(text);
+  }
+
+  handleMultipartResponse(data) {
+    const boundary = "--boundary";
+    const parts = data.split(boundary);
+    var files = [];
+
+    parts.forEach(part => {
+      if (part.includes("Content-Type: image/png")) {
+        console.log(part.split("\r\n\r\n")[1].trim());
+        var json = JSON.parse(part.split("\r\n\r\n")[1].trim()); // Trim to remove extra new lines
+        files.push(this.getFileFromJson(json));
+      }
+    });
+
+    return files;
+  }
+
+  getFileFromJson(json) {
+    const byteCharacters = atob(json.bytes);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/png' });
+
+    var url = URL.createObjectURL(blob);
+    return new SimpleFile(json.fileName, url);
+  }
+
   /**
    * @param {string} layout
-   * @param {File} screenshot
-   * @param {string} type
+   * @param {string} files
    */
-  async uploadScreenshot(layout, screenshot) {
+  async removeScreenshots(layout, files) {
     var headers = this.form();
-    headers['Content-Type'] = screenshot.type;
-    headers['fileName'] = screenshot.name;
+    headers['files'] = files;
 
-    var response = await this.fetchWithTimeout(this.API_URL + 'appendScreenshot?layout=' + layout, {
+    var response = await this.fetchWithTimeout(this.API_URL + 'removeScreenshots?layout=' + layout, {
       method: 'POST',
       timeout: 15000,
       headers: headers,
-      body: screenshot,
     });
 
     return response.ok;
+  }
+
+  /**
+   * @param {string} layout
+   * @param {FileList} files
+   */
+  async uploadScreenshots(layout, files) {
+    var headers = this.form();
+    headers['Content-Type'] = 'multipart/mixed; boundary=boundary';
+
+    var builder = [];
+    for (var file of files) {
+      builder.push("--boundary\r\n");
+
+      builder.push("Content-Type: " + file.type + "\r\n\r\n");
+
+      var bytes = await this.getByteArrayFromFile(file);
+      builder.push(JSON.stringify({ fileName: file.name, type: file.type, bytes: bytes}));
+      builder.push("\r\n");
+    }
+
+    // Write closing boundary
+    builder.push("\r\n--boundary\r\n");
+
+    var response = await this.fetchWithTimeout(this.API_URL + 'uploadScreenshots?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: headers,
+      body: builder.join('\n'),
+    });
+
+    return response.ok;
+  }
+
+  async getByteArrayFromFile(file) {
+    var instance = this;
+    return new Promise((resolve, reject) => {
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            var arrayBuffer = event.target.result;
+            var byteArray = new Uint8Array(arrayBuffer);
+
+            // Resolve the promise with the base64-encoded string
+            resolve(instance.encodeByteArrayToBase64(byteArray));
+        };
+
+        reader.onerror = function(event) {
+            alert('❌ File ' + file.name + ' could not be uploaded. File could not be read');
+            console.error('File ' + file.name + ' could not be read! Code ' + event.target.error.code);
+
+            // Reject the promise with the error
+            reject(event.target.error);
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+  encodeByteArrayToBase64(byteArray) {
+    var binary = '';
+    var bytes = new Uint8Array(byteArray);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
   }
 
   /**
@@ -272,7 +377,7 @@ export class API {
     if (remember === 'true') {
       var d = new Date();
       d.setTime(d.getTime() + 1209600000);
-      this.setOldCookie(cookie, value, d.toUTCString());
+      this.setOldCookie(cookie, value, remember, d.toUTCString());
     } else {
       document.cookie = cookie + "=" + value + ";";
     }
@@ -393,7 +498,7 @@ export class API {
       if (response.status === 200) {
         var headers = response.headers;
 
-        //console.log(...headers);
+        console.log(...headers);
         if (headers.has('sessionID') && headers.has('token')) {
           this.setCookie('sessionID', headers.get('sessionID'), remember);
           this.setCookie('token', headers.get('token'), remember);
@@ -421,5 +526,5 @@ export class API {
     }
   }
 
-  API_URL = 'http://192.168.55.170:3333/api/'/*'https://api.gpplugins.com:2096/val/'*/;
+  API_URL = 'http://127.0.0.1:8085/val/'/*'https://api.gpplugins.com:2096/val/'*/;
 }

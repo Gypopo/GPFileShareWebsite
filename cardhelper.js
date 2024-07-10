@@ -239,9 +239,23 @@ export class CardHelper {
         creationDate.innerHTML = '<b>Creation date: </b>' + d.toUTCString();
         box.appendChild(creationDate);
 
-        var creationDate = document.createElement('div');
-        creationDate.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
-        box.appendChild(creationDate);
+        // Shop count
+        var shopCount = document.createElement('div');
+        shopCount.className = 'overlay-shopCount';
+        shopCount.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
+        box.appendChild(shopCount);
+
+        // SS count
+        var screenshotCount = document.createElement('div');
+        screenshotCount.className = 'overlay-screenshotCount';
+        screenshotCount.innerHTML = '<b>Screenshots: </b>' + card.getScreenshots() + '<img src="pics/pop-out.svg" height="24" title="Click to view"></img>';
+        box.appendChild(screenshotCount);
+
+        // SS Preview
+        var ssPreview = document.createElement('div');
+        ssPreview.className = 'overlay-ssPreview';
+        ssPreview.id = 'ss-preview';
+        box.appendChild(ssPreview);
 
         // Layout files
         var filesBox = document.createElement('div');
@@ -268,6 +282,133 @@ export class CardHelper {
         this.setView(content);
 
         this.addFilePreviews(id, card);
+
+        if (card.getScreenshots() > 0)
+            this.displaySSPreview(id);
+    }
+
+    async displaySSPreview(id) {
+        var files = await this.api.getLayoutScreenshots(id);
+        for (var file of files) {
+            const img = document.createElement('img');
+            img.src = file.url;
+            img.height = 100;
+            img.addEventListener("click", () => {
+                this.displayImageGalary(files, 0);
+            });
+            document.getElementById('ss-preview').appendChild(img);
+        }
+    }
+
+    /**
+     * 
+     * @param {Array<SimpleFile>} files 
+     */
+    displayImageGalary(files, index) {
+        var galary = document.createElement('div');
+        galary.className = 'overlay-galary';
+        galary.id = 'overlay-galary';
+        galary.onclick = this.galaryCloseListener;
+
+        var ssGalary = document.createElement('div');
+        ssGalary.className = 'overlay-ssGalary';
+        ssGalary.id = 'ssGalary';
+
+        var imgSize = Math.min((window.innerHeight/1.5)/100, (window.innerWidth/1.5)/100);
+        var space = Math.max(5, Math.min(40, imgSize*5));
+        console.log(imgSize*90);
+
+        if (files.length > 1) {
+            var prevIndex = index - 1;
+            if (prevIndex < 0)
+                prevIndex = files.length-1;
+
+            // Display previous screenshot as thumbnail
+            var thumbnailBoxPrev = document.createElement('div');
+            thumbnailBoxPrev.addEventListener("click", () => {
+                var galary = document.getElementById("overlay-galary");
+                if (galary != null)
+                    galary.remove();
+                this.displayImageGalary(files, prevIndex);
+            });
+            thumbnailBoxPrev.className = 'overlay-ssTumbnail';
+            thumbnailBoxPrev.style.height = imgSize*25 + 'px';
+            thumbnailBoxPrev.style.width = imgSize*25 + 'px';
+            thumbnailBoxPrev.style.marginRight = space + 'px';
+            console.log(((imgSize*65) - (imgSize*25))/2 + 'px');
+            thumbnailBoxPrev.style.position = 'relative';
+            thumbnailBoxPrev.style.display = 'inline-block';
+            thumbnailBoxPrev.style.cursor = "pointer";
+
+            var thumbnailPrev = document.createElement('img');
+            thumbnailPrev.style.top = '50%';
+            thumbnailPrev.style.transform = 'translateY(-50%)';
+            thumbnailPrev.src = files.at(prevIndex).url;
+            thumbnailPrev.style.width = '100%';
+            thumbnailPrev.alt = 'ss' + prevIndex;
+            thumbnailPrev.style.position = 'relative';
+            thumbnailBoxPrev.appendChild(thumbnailPrev);
+            ssGalary.appendChild(thumbnailBoxPrev);
+        }
+
+        var mainIMGBox = document.createElement('div');
+        mainIMGBox.style.height = imgSize*90 + 'px';
+        mainIMGBox.style.width = imgSize*90 + 'px';
+        //mainIMGBox.style.top = '50%';
+        //mainIMGBox.style.left = '50%';
+        //mainIMGBox.style.transform = 'translate(-50%, -50%)';
+        mainIMGBox.style.position = 'relative';
+        mainIMGBox.style.display = 'inline-block';
+
+        var mainIMG = document.createElement('img');
+        mainIMG.id = 'mainIMG';
+        mainIMG.src = files.at(index).url;
+        mainIMG.alt = 'ss' + index;
+        mainIMG.style.top = '50%';
+        mainIMG.style.transform = 'translateY(-50%)';
+        mainIMG.style.position = 'relative';
+        mainIMG.style.width = '100%';
+        mainIMGBox.appendChild(mainIMG);
+        ssGalary.appendChild(mainIMGBox);
+
+        var thumbnails = document.createElement('div');
+        thumbnails.className = 'overlay-ssTumbnails';
+
+        if (files.length > 1) { // If there are more screenshots
+            var nextIndex = index + 1;
+            if (nextIndex == files.length)
+                nextIndex = 0;
+
+            // Display next screenshot as thumbnail
+            var thumbnailBoxNext = document.createElement('div');
+            thumbnailBoxNext.addEventListener("click", () => {
+                var galary = document.getElementById("overlay-galary");
+                if (galary != null)
+                    galary.remove();
+                this.displayImageGalary(files, nextIndex);
+            });
+            thumbnailBoxNext.className = 'overlay-ssTumbnail';
+            thumbnailBoxNext.style.height = imgSize*25 + 'px';
+            thumbnailBoxNext.style.width = imgSize*25 + 'px';
+            thumbnailBoxNext.style.marginLeft = space + 'px';
+            thumbnailBoxNext.style.position = 'relative';
+            thumbnailBoxNext.style.display = 'inline-block';
+            thumbnailBoxNext.style.cursor = "pointer";
+
+            var thumbnailNext = document.createElement('img');
+            thumbnailNext.style.top = '50%';
+            thumbnailNext.style.transform = 'translateY(-50%)';
+            thumbnailNext.src = files.at(nextIndex).url;
+            thumbnailNext.style.width = '100%';
+            thumbnailNext.alt = 'ss' + nextIndex;
+            thumbnailNext.style.position = 'relative';
+            thumbnailBoxNext.appendChild(thumbnailNext);
+            ssGalary.appendChild(thumbnailBoxNext);
+        }
+
+        galary.appendChild(ssGalary);
+        document.body.appendChild(galary);
+        this.setView(ssGalary);
     }
 
     /**
@@ -563,6 +704,13 @@ export class CardHelper {
         content.style.top = scrollPosition + 'px';
     }
 
+    galaryCloseListener(e) {
+        var overlay = document.getElementById('overlay-galary');
+
+        if (e.target == overlay)
+            document.body.removeChild(overlay);
+    }
+
     closeListener(e) {
         var overlay = document.getElementById('overlay');
 
@@ -575,7 +723,7 @@ export class CardHelper {
     // Displays the div at the current scrollheight so the user can see it
     setView(div) {
         var scrollPosition = window.scrollY || document.documentElement.scrollTop;
-        var pos = (window.innerHeight - div.offsetHeight)/2 + scrollPosition;
+        var pos = (window.innerHeight - div.offsetHeight) / 2 + scrollPosition;
         div.style.top = pos + 'px';
     }
 }
