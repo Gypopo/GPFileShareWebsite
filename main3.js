@@ -2,6 +2,7 @@ import { API } from './api.js';
 import { User } from './objects/User.js';
 import { NavBar } from './navbar.js';
 import { RawFile } from './objects/RawFile.js';
+import { CachedImages } from './objects/CachedImages.js';
 
 var api = new API();
 var navBar = new NavBar(api);
@@ -143,7 +144,10 @@ function displayCard(id, card) {
     currentSS.id = 'currentSS';
     box.appendChild(currentSS);
 
-    addCurrentSS(id);
+    var cached = new CachedImages(api, id);
+    cached.onload = function(files) {
+        addCurrentSS(files);
+    }
 
     //var ssAddBoxLabel = document.createElement('label');
     //ssAddBoxLabel.htmlFor = 'ss_input';
@@ -158,7 +162,7 @@ function displayCard(id, card) {
     ssAddInput.setAttribute('multiple', '');
     ssAddInput.onchange = function (e) {
         var files = e.target.files;
-        var allowedTypes = ['image/jpg', 'image/png'];
+        var allowedTypes = ['image/jpeg', 'image/png'];
         var rawFiles = [];
 
         for (var file of files) {
@@ -171,6 +175,12 @@ function displayCard(id, card) {
                 alert('❌ File ' + file.name + ' could not be uploaded. File is to large, maximum file size is 10MB!');
                 return;
             }
+
+            if (cached.cached.some(c => file.name === c.fileName) || rawFiles.some(f => file.name === f.fileName)) {
+                alert('❌ File ' + file.name + ' could not be uploaded. Already a file with that name exists!');
+                return;
+            }
+
             var reader = new FileReader();
 
             reader.onload = function (event) {
@@ -235,8 +245,7 @@ function addUploaded(name, url) {
     uploaded.appendChild(ssElement);
 }
 
-async function addCurrentSS(id) {
-    var files = await api.getLayoutScreenshots(id);
+async function addCurrentSS(files) {
     var currentSS = document.getElementById('currentSS');
     for (var file of files) {
         var ssElement = document.createElement('li');
@@ -371,8 +380,13 @@ function createButtonRow(layout, card) {
         }
 
         var removedSS = document.getElementById('currentSS').getAttribute('removedSS');
-        if (removedSS != null)
-            api.removeScreenshots(layout, removedSS);
+        if (removedSS != null) {
+            api.removeScreenshots(layout, removedSS).then(function (status) {
+                if (!status) {
+                    alert('Failed to remove screenshots');
+                }
+            });
+        }
     }
     buttonRow.appendChild(button1);
 
@@ -420,6 +434,10 @@ function saveCard(card) {
 
     var uploadedSS = document.getElementById('ss_input').files.length;
     card.screenshots = card.screenshots + uploadedSS;
+
+    var removedSS = document.getElementById('currentSS').getAttribute('removedSS');
+    if (removedSS != null)
+        card.screenshots = card.screenshots - JSON.parse(removedSS).length;
 
     return card;
 }
