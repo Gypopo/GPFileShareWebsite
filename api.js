@@ -360,7 +360,7 @@ export class API {
     if (remember === 'true') {
       var d = new Date();
       d.setTime(d.getTime() + 1209600000);
-      this.setOldCookie(cookie, value, d.toUTCString());
+      this.setOldCookie(cookie, value, remember, d.toUTCString());
     } else {
       document.cookie = cookie + "=" + value + ";";
     }
@@ -481,7 +481,7 @@ export class API {
       if (response.status === 200) {
         var headers = response.headers;
 
-        //console.log(...headers);
+        console.log(...headers);
         if (headers.has('sessionID') && headers.has('token')) {
           this.setCookie('sessionID', headers.get('sessionID'), remember);
           this.setCookie('token', headers.get('token'), remember);
