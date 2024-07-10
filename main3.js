@@ -240,14 +240,50 @@ async function addCurrentSS(id) {
     var currentSS = document.getElementById('currentSS');
     for (var file of files) {
         var ssElement = document.createElement('li');
+        ssElement.id = file.fileName;
+
         var ss = document.createElement('a');
         ss.innerText = file.fileName;
         ss.href = file.url;
         ss.target = '_blank';
         ss.style.color = 'white';
         ssElement.append(ss);
+        
+        ssElement.append(getDeleteBtn(file.fileName));
+
         currentSS.appendChild(ssElement);
     }
+}
+
+function getDeleteBtn(file) {
+    var delBtn = document.createElement('img');
+    delBtn.style.position = 'inline-block';
+    delBtn.src = 'pics/x-10332.svg';
+    delBtn.style.height = '10px';
+    delBtn.style.marginLeft = '5px';
+    delBtn.style.cursor = 'pointer';
+    delBtn.title = 'Click to remove this screenshot';
+    delBtn.addEventListener("click", () => {
+        removeScreenshot(file);
+    });
+    
+    return delBtn;
+}
+
+function removeScreenshot(file) {
+    var currentSS = document.getElementById('currentSS');
+    var ssEntry = document.getElementById(file);
+    ssEntry.remove();
+
+    var array;
+    if (currentSS.hasAttribute('removedSS')) {
+        array = JSON.parse(currentSS.getAttribute('removedSS'));
+    } else {
+        array = new Array();
+    }
+    array.push(file);
+
+    currentSS.setAttribute('removedSS', JSON.stringify(array));
 }
 
 var mcVersions = [1.20, 1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10, 1.9, 1.8]
@@ -333,6 +369,10 @@ function createButtonRow(layout, card) {
                 }
             });
         }
+
+        var removedSS = document.getElementById('currentSS').getAttribute('removedSS');
+        if (removedSS != null)
+            api.removeScreenshots(layout, removedSS);
     }
     buttonRow.appendChild(button1);
 

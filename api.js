@@ -141,6 +141,23 @@ export class API {
 
   /**
    * @param {string} layout
+   * @param {string} files
+   */
+  async removeScreenshots(layout, files) {
+    var headers = this.form();
+    headers['files'] = files;
+
+    var response = await this.fetchWithTimeout(this.API_URL + 'removeScreenshots?layout=' + layout, {
+      method: 'POST',
+      timeout: 15000,
+      headers: headers,
+    });
+
+    return response.ok;
+  }
+
+  /**
+   * @param {string} layout
    * @param {FileList} files
    */
   async uploadScreenshots(layout, files) {
