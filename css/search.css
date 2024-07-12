@@ -22,6 +22,7 @@
     padding: 20px;
     box-sizing: border-box;
     height: 100%;
+    overflow: hidden;
 }
 
 .sidebarSearch {
@@ -64,3 +65,51 @@
 .sidebarFilter label {
     margin-left: 10px;
 }
+
+.sidebarSorts {
+    display: block;
+}
+
+.sidebarSorts label {
+    margin-bottom: 5px;
+}
+
+.sidebarSortsContainer {
+    margin-top: 5%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 130px));
+}
+
+.sidebarSorts input[type="text"],
+.sidebarSorts input[type="checkbox"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.sidebarSort {
+    position: relative;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    max-height: min-content;
+    display: inline-block;
+}
+
+.sidebarSort label {
+    margin-left: 10px;
+}
+
+@media (max-width: 1200px) {
+    .sidebar {
+      width: 200px; /* Width for large tablets and small desktops */
+    }
+}
+  
+  @media (max-width: 480px) {
+    .sidebar {
+      width: 150px; /* Width for phones */
+    }
+  }
