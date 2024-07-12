@@ -150,10 +150,25 @@ export class CardHelper {
 
         var downloadCount = document.createElement('div');
         downloadCount.className = 'downloadCount';
-        downloadCount.innerHTML = '<img src="pics/download.svg" height=20></img> ' + card.getDownloads();
+        downloadCount.innerHTML = '<img src="pics/download.svg" height=20></img> ' + this.getFormatted(card.getDownloads());
         container.appendChild(downloadCount);
 
         div.appendChild(container);
+    }
+
+    getFormatted(downloads) {
+        // Define the suffixes for thousands, millions, billions, etc.
+        const suffixes = ["", "k", "M", "B", "T"];
+        // Determine the order of magnitude of the number
+        const order = Math.floor(Math.log10(Math.abs(downloads)) / 3);
+        // Determine the suffix based on the order of magnitude
+        const suffix = suffixes[order] || '';
+        // Calculate the short number by dividing the original number by 1000^order
+        const shortNumber = downloads / Math.pow(10, order * 3);
+        // Format the short number to one decimal place and add the suffix
+        return shortNumber % 1 === 0
+        ? shortNumber + suffix
+        : shortNumber.toFixed(1) + suffix;
     }
 
     /**
