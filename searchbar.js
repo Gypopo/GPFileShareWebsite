@@ -18,7 +18,7 @@ export class Searchbar {
     sidebar = document.getElementById('sidebar');
     content = document.getElementById('sidebarContent');
     searchInput = document.getElementById('sidebarSearch');
-    filters = document.getElementById('sidebarFilters');
+    //filters = document.getElementById('sidebarFilters');
     sorts = document.getElementById('sidebarSorts');
 
     constructor(cardhelper) {
@@ -31,22 +31,24 @@ export class Searchbar {
     initItems(cards) {
         this.cards = cards;
 
-        this.getKnownFilters();
+        //this.getKnownFilters();
         this.getKnownSortOptions();
 
         this.sidebar.addEventListener('input', (event) => {
-            // Make sure only one sort is active at a time
-            var checkboxes = document.querySelectorAll('#sidebarSorts input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkboxes.forEach(otherCheckbox => {
-                    if (otherCheckbox !== checkbox) {
-                        otherCheckbox.checked = false;
-                    }
-                });
+            if (event.target.type === 'checkbox') {
+                // Make sure only one sort is active at a time
+                var checkboxes = document.querySelectorAll('#sidebarSorts input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkboxes.forEach(otherCheckbox => {
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+                    });
 
-                // Because default browser behavior
-                event.target.checked = true;
-            });
+                    // Because default browser behavior
+                    event.target.checked = true;
+                });
+            }
 
             this.filterContent();
         });
@@ -64,7 +66,7 @@ export class Searchbar {
         var searchResult = this.getInitialSearchResult();
 
         var searchText = this.searchInput.value.toLowerCase();
-        var activeFilters = this.getActiveFilters();
+        //var activeFilters = this.getActiveFilters();
         var activeSort = this.getActiveSort();
 
         var results = Array.from(this.cards.getAll());
@@ -72,16 +74,23 @@ export class Searchbar {
         // Search using title/author param
         if (searchText) {
             results = results.filter(function ([id, card]) {
-                return card.getTitle().toLowerCase().includes(searchText) || card.getAuthor().getAuthor().toLowerCase().includes(searchText);
+                if (card.getTitle().toLowerCase().includes(searchText))
+                    return true;
+                if (card.getAuthor().getAuthor().toLowerCase().includes(searchText))
+                    return true;
+                if (searchText.startsWith('#') && card.getTags().some(tag => tag.toLowerCase().includes(searchText.substring(1))))
+                    return true;
             });
         }
 
+        /*
         // Search using tags
         if (activeFilters.length != 0) {
             results = results.filter(function ([id, card]) {
                 return card.getTags().some(tag => activeFilters.indexOf(tag) >= 0);
             });
         }
+            */
 
         if (activeSort === 'Downloads') {
             results = results.sort(function ([id1, card1], [id2, card2]) {
@@ -126,7 +135,7 @@ export class Searchbar {
             }
         }
 
-        return 'Creation date'; // Default sort option if no check box is selected
+        return 'Downloads'; // Default sort option if no check box is selected
     }
 
     /**
