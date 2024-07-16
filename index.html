@@ -172,6 +172,13 @@
             margin-top: 2.5%;
         }
 
+        .overlay-buttonRow-bottom {
+            margin-top: auto;
+            position: relative;
+            height: 35px;
+            width: 100%;
+        }
+
         .card-button {
             border-radius: 10px;
             background-color: #47a3ff8c;
@@ -223,6 +230,32 @@
         }
 
         .preview-button:active {
+            background-color: #0b4d8fdf;
+            transform: translateY(4px);
+        }
+
+        .update-button {
+            border-radius: 12.5px;
+            background-color: #47a3ff8c;
+            width: 100%;
+            height: 30px;
+            text-align: center;
+            font-style: "Comic Sans MS";
+            line-height: 30px;
+            overflow: hidden;
+            border: solid;
+            border-width: 1px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background-color: #3484d3df;
+            transition-duration: 0.1s;
+        }
+
+        .update-button:active {
             background-color: #0b4d8fdf;
             transform: translateY(4px);
         }
@@ -359,6 +392,29 @@
             max-width: inherit;
             margin-bottom: 10px;
             cursor: pointer;
+        }
+
+        .overlay-updateCount {
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            width: fit-content;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            max-width: inherit;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .revisionTable {
+            height: fit-content;
+            display: grid;
+            grid-template-columns: 20% 30% 50%;
+        }
+
+        .revisionItem {
+            display: inline-block;
         }
 
         .overlay-ssPreview {

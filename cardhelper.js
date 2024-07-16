@@ -157,6 +157,8 @@ export class CardHelper {
     }
 
     getFormatted(downloads) {
+        if (downloads == 0)
+            return downloads;
         // Define the suffixes for thousands, millions, billions, etc.
         const suffixes = ["", "k", "M", "B", "T"];
         // Determine the order of magnitude of the number
@@ -167,8 +169,8 @@ export class CardHelper {
         const shortNumber = downloads / Math.pow(10, order * 3);
         // Format the short number to one decimal place and add the suffix
         return shortNumber % 1 === 0
-        ? shortNumber + suffix
-        : shortNumber.toFixed(1) + suffix;
+            ? shortNumber + suffix
+            : shortNumber.toFixed(1) + suffix;
     }
 
     /**
@@ -260,11 +262,30 @@ export class CardHelper {
         shopCount.innerHTML = '<b>Shop count: </b>' + card.getFiles().length;
         box.appendChild(shopCount);
 
+        // Update count
+        if (card.getRevisions() > 0) {
+            var revisionCount = document.createElement('div');
+            revisionCount.className = 'overlay-updateCount';
+            revisionCount.innerHTML = '<b>Updates: </b>' + card.getRevisions() + '<img src="pics/pop-out.svg" height="24" title="Click to get more info"></img>';
+            revisionCount.addEventListener("click", () => {
+                var link = window.location.href + '&showRevisions=true';
+                history.pushState(null, null, link);
+
+                this.showRevisions(id);
+            });
+            box.appendChild(revisionCount);
+        }
+
         // SS count
-        var screenshotCount = document.createElement('div');
-        screenshotCount.className = 'overlay-screenshotCount';
-        screenshotCount.innerHTML = '<b>Screenshots: </b>' + card.getScreenshots() + '<img src="pics/pop-out.svg" height="24" title="Click to view"></img>';
-        box.appendChild(screenshotCount);
+        if (card.getScreenshots() > 0) {
+            var screenshotCount = document.createElement('div');
+            screenshotCount.className = 'overlay-screenshotCount';
+            screenshotCount.innerHTML = '<b>Screenshots: </b>' + card.getScreenshots() + '<img src="pics/pop-out.svg" height="24" title="Click to view"></img>';
+            screenshotCount.addEventListener("click", () => {
+                this.displayImageGalary(files, 0);
+            });
+            box.appendChild(screenshotCount);
+        }
 
         // SS Preview
         var ssPreview = document.createElement('div');
@@ -329,14 +350,14 @@ export class CardHelper {
         ssGalary.className = 'overlay-ssGalary';
         ssGalary.id = 'ssGalary';
 
-        var imgSize = Math.min((window.innerHeight/1.5)/100, (window.innerWidth/1.5)/100);
-        var space = Math.max(5, Math.min(40, imgSize*5));
-        console.log(imgSize*90);
+        var imgSize = Math.min((window.innerHeight / 1.5) / 100, (window.innerWidth / 1.5) / 100);
+        var space = Math.max(5, Math.min(40, imgSize * 5));
+        console.log(imgSize * 90);
 
         if (files.length > 1) {
             var prevIndex = index - 1;
             if (prevIndex < 0)
-                prevIndex = files.length-1;
+                prevIndex = files.length - 1;
 
             // Display previous screenshot as thumbnail
             var thumbnailBoxPrev = document.createElement('div');
@@ -347,10 +368,10 @@ export class CardHelper {
                 this.displayImageGalary(files, prevIndex);
             });
             thumbnailBoxPrev.className = 'overlay-ssTumbnail';
-            thumbnailBoxPrev.style.height = imgSize*25 + 'px';
-            thumbnailBoxPrev.style.width = imgSize*25 + 'px';
+            thumbnailBoxPrev.style.height = imgSize * 25 + 'px';
+            thumbnailBoxPrev.style.width = imgSize * 25 + 'px';
             thumbnailBoxPrev.style.marginRight = space + 'px';
-            console.log(((imgSize*65) - (imgSize*25))/2 + 'px');
+            console.log(((imgSize * 65) - (imgSize * 25)) / 2 + 'px');
             thumbnailBoxPrev.style.position = 'relative';
             thumbnailBoxPrev.style.display = 'inline-block';
             thumbnailBoxPrev.style.cursor = "pointer";
@@ -367,8 +388,8 @@ export class CardHelper {
         }
 
         var mainIMGBox = document.createElement('div');
-        mainIMGBox.style.height = imgSize*90 + 'px';
-        mainIMGBox.style.width = imgSize*90 + 'px';
+        mainIMGBox.style.height = imgSize * 90 + 'px';
+        mainIMGBox.style.width = imgSize * 90 + 'px';
         //mainIMGBox.style.top = '50%';
         //mainIMGBox.style.left = '50%';
         //mainIMGBox.style.transform = 'translate(-50%, -50%)';
@@ -403,8 +424,8 @@ export class CardHelper {
                 this.displayImageGalary(files, nextIndex);
             });
             thumbnailBoxNext.className = 'overlay-ssTumbnail';
-            thumbnailBoxNext.style.height = imgSize*25 + 'px';
-            thumbnailBoxNext.style.width = imgSize*25 + 'px';
+            thumbnailBoxNext.style.height = imgSize * 25 + 'px';
+            thumbnailBoxNext.style.width = imgSize * 25 + 'px';
             thumbnailBoxNext.style.marginLeft = space + 'px';
             thumbnailBoxNext.style.position = 'relative';
             thumbnailBoxNext.style.display = 'inline-block';
@@ -424,6 +445,103 @@ export class CardHelper {
         galary.appendChild(ssGalary);
         document.body.appendChild(galary);
         this.setView(ssGalary);
+    }
+
+    /**
+     * @param {string} layout
+     */
+    async showRevisions(layout) {
+        await this.api.getRevisionInfo(layout).then(v => {
+            var overlay = document.getElementById('overlay');
+            if (overlay != null)
+                overlay.remove();
+
+            this.displayRevisionInfo(layout, v);
+        });
+    }
+
+    /**
+     * @param {string} layout 
+     * @param {string} payload
+     * @param {string} file 
+     */
+    displayRevisionInfo(layout, revisions) {
+        var overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.id = 'overlay';
+
+        var content = document.createElement('div');
+        content.className = 'overlay-content';
+
+        var title = document.createElement('div');
+        title.innerHTML = 'Update info:';
+        title.className = 'overlay-title';
+        content.appendChild(title);
+
+        var box = document.createElement('div');
+        box.className = 'overlay-box';
+
+        // GUIDE
+        var revisionGuide = document.createElement('div');
+        revisionGuide.className = 'revisionTable';
+        revisionGuide.style.backgroundColor = 'rgb(167 167 167)';
+        revisionGuide.innerHTML = '<div class="revisionItem">Version:</div><div class="revisionItem">Release date:</div><div class="revisionItem">Update message:</div>'
+        revisionGuide.style.marginBottom = '10px';
+        box.appendChild(revisionGuide);
+
+        for (let i = revisions.length -1; i >= 0; i--) {
+            var revision = revisions[i];
+
+            var seperator = document.createElement('hr');
+            seperator.style.margin = '0';
+            box.appendChild(seperator);
+
+            var container = document.createElement('div');
+            container.className = 'revisionTable';
+            container.style.marginTop = '5px';
+
+            // Version
+            var revisionVer = document.createElement('div');
+            revisionVer.className = 'revisionItem';
+            revisionVer.innerText = 'v' + revision.version;
+
+            // Release date
+            var d = new Date();
+            d.setTime(revision.date);
+            const dateFormat = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+              };
+
+            var revisionDate = document.createElement('div');
+            revisionDate.className = 'revisionItem';
+            revisionDate.innerText = d.toLocaleDateString('en-US', dateFormat);
+
+            // Changelog
+            var revisionMSG = document.createElement('div');
+            revisionMSG.className = 'revisionItem';
+            revisionMSG.style.fontStyle = 'oblique';
+            revisionMSG.innerText = revision.msg;
+
+            container.appendChild(revisionVer);
+            container.appendChild(revisionDate);
+            container.appendChild(revisionMSG);
+
+            box.appendChild(container);
+        }
+
+        var buttonRow = this.createRevisionButtonRow(layout);
+        box.appendChild(buttonRow);
+
+        content.appendChild(box);
+
+        overlay.appendChild(content);
+        overlay.onclick = this.closeListener;
+
+        document.body.appendChild(overlay);
+
+        this.setView(content);
     }
 
     /**
@@ -510,6 +628,37 @@ export class CardHelper {
         this.setView(content);
 
         Prism.highlightAll();
+    }
+
+    /**
+     * @param {string} layout
+     * @returns {HTMLDivElement}
+     */
+    createRevisionButtonRow(layout) {
+        // Button row
+        var buttonRow = document.createElement('div');
+        buttonRow.className = 'overlay-buttonRow-bottom';
+
+        var bottom = document.createElement('div');
+        bottom.className = 'bottom';
+
+        var button2 = document.createElement('button');
+        button2.className = 'update-button';
+        button2.innerHTML = '<- Back';
+        button2.onclick = () => {
+            var link = window.location.href.split('?')[0] + '?layout=' + layout;
+            history.pushState(null, null, link);
+
+            var overlay = document.getElementById('overlay');
+            overlay.remove();
+
+            this.displayCard(layout, this.cards.get(layout));
+        }
+
+        bottom.appendChild(button2);
+        buttonRow.appendChild(bottom);
+
+        return buttonRow;
     }
 
     /**

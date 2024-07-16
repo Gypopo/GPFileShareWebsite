@@ -101,17 +101,22 @@ async function completeLoading() {
                 if (card === undefined)
                     throw new Error('Cannot find card with ID ' + id);
 
-                if (!params.has("preview")) {
-                    // Preview the card
-                    cardhelper.displayCard(id, card);
-                } else {
+                if (params.has("preview")) {
                     // Preview the file
                     var file = params.get("preview");
                     if (card.getFiles().includes(file)) {
-                        await api.previewFile(params.get("layout"), file).then(v => {
+                        await api.previewFile(id, file).then(v => {
                             cardhelper.previewFile(id, file, v);
                         });
                     } else throw new Error('Cannot find file ' + file + ' inside layout ' + card);
+                } else if (params.has("showRevisions")) {
+                    // Show revisions
+                    await api.getRevisionInfo(id).then(v => {
+                        cardhelper.showRevisions(id, v);
+                    });
+                } else {
+                    // Preview the card
+                    cardhelper.displayCard(id, card);
                 }
             }
         } catch (e) {
