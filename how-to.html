@@ -8,7 +8,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
     <script src="gtag.js"></script>
     <title>How it works</title>
-    <link rel="icon" type="image/x-icon" href="pics/Logo_GP5.0 no background.png">
+    <link rel="icon" type="image/x-icon" href="pics/Source-File-1024x1024-enlarged2_C6.png">
     <link rel="stylesheet" href="css/nav.css">
     <style>
         body {
@@ -66,6 +66,25 @@
             top: 8px;
         }
 
+        .warn {
+            position: relative;
+            border-radius: 5px;
+            background-color: #3d3d3d;
+            padding: 10px;
+            padding-left: 40px;
+            padding-right: 20px;
+            color: white;
+            border-left: solid #ff7b00;
+            border-left-width: 5px;
+        }
+    
+        .warn-img {
+            position: absolute;
+            height: 20px;
+            left: 10px;
+            top: 8px;
+        }
+
         .footerLinks {
             display: inline-grid;
             grid-auto-flow: row;
@@ -114,7 +133,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark static-top" id="navbar">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="pics/Logo_GP5.0 no background.png" alt="..." height="64">
+            <img src="pics/Source-File-1024x1024-enlarged2_C6.png" alt="..." height="64">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,7 +180,7 @@
         <br>
         <br>
         <h4>
-            <b>How to upload and download premade shop layouts for EconomyShopGUI</b>
+            <b>How to upload, download and update premade shop layouts for EconomyShopGUI</b>
         </h4>
         <br>
         <div class="disclaimer">
@@ -221,6 +240,24 @@
             The install command can quickly be located by clicking any layout on the <a href="index.html">layouts page</a> > Get install command > Click the command to copy
         </div>
         <br>
+        <br>
+        <h5><b>Updating existing layouts</b></h5>
+            Updating existing layouts is usefull for minecraft updates or simple changes/corrections in your layout<br>
+        <br>
+        <ul>
+            <li>
+                Use the <u>/eshop updateLayout [layoutID]</u> command to start the update process for your layout
+            </li>
+            <ul>
+                <li>
+                    Replacing <u>[layoutID]</u> with the layout specific ID
+                </li>
+            </ul>
+        </ul>
+        <div class="warn">
+            <img src="pics/exclamation-mark.svg" class="warn-img">
+            Note that this feature is only available for layouts uploaded using Discord verification and can only be updated by the original author of the layout
+        </div>
         <br>
         <h5><b>Differences between upload methods:</b></h5>
         There are two different ways for upload layouts, anonymously or using Discord authentication.

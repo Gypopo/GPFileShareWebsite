@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
     <script src="gtag.js"></script>
-    <link rel="icon" type="image/x-icon" href="pics/Logo_GP5.0 no background.png">
+    <link rel="icon" type="image/x-icon" href="pics/Source-File-1024x1024-enlarged2_C6.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caprasimo|Kanit:wght@300&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.js"></script>
@@ -120,6 +120,12 @@
             color: #000000;
         }
 
+        .seperator hr {
+            margin: 1rem 0;
+            opacity: .25;
+            height: 1px;
+        }
+
         .page {
             padding: 2.5%;
             display: grid;
@@ -164,6 +170,13 @@
             height: 35px;
             width: 100%;
             margin-top: 2.5%;
+        }
+
+        .overlay-buttonRow-bottom {
+            margin-top: auto;
+            position: relative;
+            height: 35px;
+            width: 100%;
         }
 
         .card-button {
@@ -217,6 +230,32 @@
         }
 
         .preview-button:active {
+            background-color: #0b4d8fdf;
+            transform: translateY(4px);
+        }
+
+        .update-button {
+            border-radius: 12.5px;
+            background-color: #47a3ff8c;
+            width: 100%;
+            height: 30px;
+            text-align: center;
+            font-style: "Comic Sans MS";
+            line-height: 30px;
+            overflow: hidden;
+            border: solid;
+            border-width: 1px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background-color: #3484d3df;
+            transition-duration: 0.1s;
+        }
+
+        .update-button:active {
             background-color: #0b4d8fdf;
             transform: translateY(4px);
         }
@@ -353,6 +392,29 @@
             max-width: inherit;
             margin-bottom: 10px;
             cursor: pointer;
+        }
+
+        .overlay-updateCount {
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            width: fit-content;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            max-width: inherit;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .revisionTable {
+            height: fit-content;
+            display: grid;
+            grid-template-columns: 20% 30% 50%;
+        }
+
+        .revisionItem {
+            display: inline-block;
         }
 
         .overlay-ssPreview {
@@ -804,7 +866,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark static-top" id="navbar">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="pics/Logo_GP5.0 no background.png" alt="..." height="64">
+                    <img src="pics/Source-File-1024x1024-enlarged2_C6.png" alt="..." height="64">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -838,12 +900,18 @@
                 <div class="sidebar" id="sidebar">
                     <h3>Browse layouts:</h3>
                     <div class="sidebarSearch">
-                        <input type="text" id="sidebarSearch" placeholder="Layout title or author">
+                        <input type="text" id="sidebarSearch" placeholder="Title, author or #tag">
                     </div>
+                    <div class="sidebarSorts">
+                        <h3 style="width: 100%;">Sort by:</h3>
+                        <div class="sidebarSortsContainer" id="sidebarSorts"></div>
+                    </div>
+                    <!--
                     <div class="sidebarFilters">
                         <h3 style="width: 100%;">Search by tags:</h3>
                         <div class="sidebarFiltersContainer" id="sidebarFilters"></div>
                     </div>
+                    -->
                 </div>
             </div>
         </div>

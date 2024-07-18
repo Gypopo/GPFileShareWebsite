@@ -9,13 +9,17 @@ export class Searchbar {
     // Some example tags the user can toggle to filter
     knownTags = ["Survival", "Modern", "Cheap", "Rich", "AllItems", "Compact", "Clean"];
 
+    // Some example sort options the user can toggle
+    knownSorts = ["Downloads", "Creation date"]
+
     // All the layouts containing this document
     cards;
 
     sidebar = document.getElementById('sidebar');
     content = document.getElementById('sidebarContent');
     searchInput = document.getElementById('sidebarSearch');
-    filters = document.getElementById('sidebarFilters');
+    //filters = document.getElementById('sidebarFilters');
+    sorts = document.getElementById('sidebarSorts');
 
     constructor(cardhelper) {
         this.cardhelper = cardhelper;
@@ -27,11 +31,31 @@ export class Searchbar {
     initItems(cards) {
         this.cards = cards;
 
-        this.getKnownFilters();
+        //this.getKnownFilters();
+        this.getKnownSortOptions();
 
-        this.sidebar.addEventListener('input', () => {
+        this.sidebar.addEventListener('input', (event) => {
+            if (event.target.type === 'checkbox') {
+                // Make sure only one sort is active at a time
+                var checkboxes = document.querySelectorAll('#sidebarSorts input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkboxes.forEach(otherCheckbox => {
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+                    });
+
+                    // Because default browser behavior
+                    event.target.checked = true;
+                });
+            }
+
             this.filterContent();
         });
+
+        // Check the downloads sort option by default and filter
+        document.getElementById('Downloads_tag').querySelector('input').checked = true;
+        this.filterContent();
     }
 
     /**
@@ -42,22 +66,39 @@ export class Searchbar {
         var searchResult = this.getInitialSearchResult();
 
         var searchText = this.searchInput.value.toLowerCase();
-        var activeFilters = this.getActiveFilters();
+        //var activeFilters = this.getActiveFilters();
+        var activeSort = this.getActiveSort();
 
         var results = Array.from(this.cards.getAll());
 
         // Search using title/author param
         if (searchText) {
-            var results = results.filter(function ([id, card]) {
-                return card.getTitle().toLowerCase().includes(searchText) || card.getAuthor().getAuthor().toLowerCase().includes(searchText);
+            results = results.filter(function ([id, card]) {
+                if (card.getTitle().toLowerCase().includes(searchText))
+                    return true;
+                if (card.getAuthor().getAuthor().toLowerCase().includes(searchText))
+                    return true;
+                if (searchText.startsWith('#') && card.getTags().some(tag => tag.toLowerCase().includes(searchText.substring(1))))
+                    return true;
             });
         }
 
+        /*
         // Search using tags
         if (activeFilters.length != 0) {
             results = results.filter(function ([id, card]) {
                 return card.getTags().some(tag => activeFilters.indexOf(tag) >= 0);
             });
+        }
+            */
+
+        if (activeSort === 'Downloads') {
+            results = results.sort(function ([id1, card1], [id2, card2]) {
+                // Multiply download count of premium layouts since naturally they get downloaded less then normal layouts
+                return (card2.isPremium() ? card2.getDownloads() * 10 : card2.getDownloads()) - (card1.isPremium() ? card1.getDownloads() * 10 : card1.getDownloads());
+            });
+        } else if (activeSort === 'Creation date') {
+            // Don't do anything since the default order of the cards is already by its creation date
         }
 
         // Display the results
@@ -83,6 +124,21 @@ export class Searchbar {
     }
 
     /**
+     * @returns {Array<string>}
+     */
+    getActiveSort() {
+        var sorts = this.sorts.querySelectorAll('div');
+
+        for (var sort of sorts) {
+            if (sort.querySelector('input').checked) {
+                return sort.id.replace('_tag', '');
+            }
+        }
+
+        return 'Downloads'; // Default sort option if no check box is selected
+    }
+
+    /**
      * @returns {Array<HTMLDivElement>}
      */
     getKnownFilters() {
@@ -101,6 +157,28 @@ export class Searchbar {
             container.appendChild(label);
 
             this.filters.appendChild(container);
+        }
+    }
+
+    /**
+     * @returns {Array<HTMLDivElement>}
+     */
+    getKnownSortOptions() {
+        for (var sort of this.knownSorts) {
+            var container = document.createElement('div');
+            container.className = 'sidebarSort';
+            container.id = sort + "_tag";
+
+            var input = document.createElement('input');
+            input.type = 'checkbox';
+            container.appendChild(input);
+
+            var label = document.createElement('label');
+            label.setAttribute('for', sort + "_tag");
+            label.textContent = sort;
+            container.appendChild(label);
+
+            this.sorts.appendChild(container);
         }
     }
 

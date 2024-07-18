@@ -61,7 +61,7 @@ export class API {
 
   reviver(key, value) {
     if (typeof value === 'object') {
-      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.screenshots, value.files, value.plVer, value.mcVer, value.prem);
+      return new Card(value.author, value.title, value.description, value.creation, value.tags, value.views, value.downloads, value.screenshots, value.revisions, value.files, value.plVer, value.mcVer, value.prem);
     }
     return value;
   }
@@ -79,6 +79,20 @@ export class API {
     });
 
     return await response.text();
+  }
+
+  /**
+  * @param {string} layout
+  * @returns {Promise<string>}
+  */
+  async getRevisionInfo(layout) {
+    var response = await this.fetchWithTimeout(this.API_URL + 'getRevisionInfo?layout=' + layout, {
+      method: 'GET',
+      timeout: 15000,
+    });
+
+    var raw = await response.text();
+    return JSON.parse(raw);
   }
 
   /**

@@ -9,12 +9,14 @@ export class Card {
     * @param {Array<string>} tags
     * @param {number} views
     * @param {number} downloads
+    * @param {number} screenshots
+    * @param {number} revisions
     * @param {Array<string>} files
     * @param {string} pluginVersion
     * @param {string} mcVersion
     * @param {boolean} prem
     */
-    constructor(author, title, description, createDate, tags, views, downloads, screenshots, files, pluginVersion, mcVersion, prem) {
+    constructor(author, title, description, createDate, tags, views, downloads, screenshots, revisions, files, pluginVersion, mcVersion, prem) {
         this.author = new Author(author);
         this.title = title;
         this.description = description;
@@ -23,6 +25,7 @@ export class Card {
         this.views = views;
         this.downloads = downloads;
         this.screenshots = screenshots;
+        this.revisions = revisions;
         this.files = files;
         this.plVer = pluginVersion;
         this.mcVer = mcVersion;
@@ -83,6 +86,13 @@ export class Card {
      */
     getScreenshots() {
         return this.screenshots;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getRevisions() {
+        return this.revisions;
     }
 
     /**
