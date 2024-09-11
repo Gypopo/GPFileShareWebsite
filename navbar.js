@@ -45,7 +45,7 @@ export class NavBar {
 
         var avatar = document.createElement('img');
         avatar.className = 'avatar';
-        avatar.src = user.avatar;
+        avatar.src = user.avatar === undefined ? "/pics/discordred.png" : user.avatar;
         nav_item_name.appendChild(avatar);
 
         var dropdown = document.createElement('ul');
