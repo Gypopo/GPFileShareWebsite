@@ -2,32 +2,35 @@
 <html>
 
 <head>
+    <title>How it works</title>
+    <meta name="description" content="Learn how to install, download and update layouts">
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVTY86ETZP"></script>
     <script src="gtag.js"></script>
-    <title>How it works</title>
     <link rel="icon" type="image/x-icon" href="pics/Source-File-1024x1024-enlarged2_C6.png">
     <link rel="stylesheet" href="css/nav.css">
     <style>
         body {
-                height: 100%;
-                width: 100%;
-                margin: 0%;
-                min-height: 100vh;
+            height: 100%;
+            width: 100%;
+            margin: 0%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            }
-    
+            line-height: 1.5rem;
+        }
+
         .content {
             margin: 5%;
             margin-top: 20px;
             background-color: #fff;
             border-radius: 5px;
             padding: 20px;
+            font-family: "Open Sans", sans-serif;
         }
-    
+
         .disclaimer {
             position: relative;
             border-radius: 5px;
@@ -36,17 +39,18 @@
             padding-left: 40px;
             padding-right: 20px;
             color: white;
-            border-left: solid rgb(0, 174, 0);
+            border-left: solid rgb(89, 179, 89);
             border-left-width: 5px;
+            font-size: 15px;
         }
-    
+
         .disclaimer-img {
             position: absolute;
             height: 20px;
             left: 10px;
-            top: 15px;
+            top: 11px;
         }
-    
+
         .info {
             position: relative;
             border-radius: 5px;
@@ -55,15 +59,17 @@
             padding-left: 40px;
             padding-right: 20px;
             color: white;
-            border-left: solid #0077FF;
+            border-left: solid #5c96d8;
             border-left-width: 5px;
+            font-size: 15px;
         }
-    
+
         .info-img {
             position: absolute;
             height: 20px;
             left: 10px;
-            top: 8px;
+            top: 10px;
+
         }
 
         .warn {
@@ -74,15 +80,20 @@
             padding-left: 40px;
             padding-right: 20px;
             color: white;
-            border-left: solid #ff7b00;
+            border-left: solid #ffa048;
             border-left-width: 5px;
+            font-size: 15px;
         }
-    
+
         .warn-img {
             position: absolute;
             height: 20px;
             left: 10px;
-            top: 8px;
+            top: 12px;
+        }
+
+        li {
+            margin-top: 2px;
         }
 
         .footerLinks {
@@ -160,115 +171,138 @@
 
 <body style="background-color:#252525">
     <div class="content">
-        <h4>
-            <b>What is this site for?</b>
-        </h4>    
-        This site is a community marketplace which hosts custom/premade shop layouts made for <a href="https://www.spigotmc.org/resources/economyshopgui.69927/" target="_blank">EconomyShopGUI</a> or <a href="https://www.spigotmc.org/resources/economyshopgui-premium.104414/" target="_blank">EconomyShopGUI Premium</a> created by community members
-        <br>
-        For two main reasons we've made this marketplace:
-        <br>
-        <br>
-        <ul>
-            <li>
-                Reason one being so other people can easily find, download and install premade shop layouts so they can start within seconds
-            </li>
-            <li>
-                Reason two being that this marketplace will give inspiration to new server owners and get them started quickly creating their own server shop
-            </li>
-        </ul>
-        We hope that after a while this marketplace will be filled using lots of premade/custom shop layouts
+        <h3 style="font-weight: 700; margin-bottom: 15px;">
+            What is this site for?
+        </h3>
+        This site is a community marketplace which hosts custom/premade shop layouts made for <a
+            href="https://www.spigotmc.org/resources/economyshopgui.69927/" target="_blank"
+            style="color: #0077ff; font-weight: 600; text-decoration: none;">EconomyShopGUI</a> and <a
+            href="https://www.spigotmc.org/resources/economyshopgui-premium.104414/" target="_blank"
+            style="color: #0077ff; font-weight: 600; text-decoration: none;">EconomyShopGUI
+            Premium</a> created by community members
         <br>
         <br>
-        <h4>
-            <b>How to upload, download and update premade shop layouts for EconomyShopGUI</b>
-        </h4>
-        <br>
-        <div class="disclaimer">
-            <img src="pics/verified-author.svg" class="disclaimer-img">
-            Note that uploading/downloading layouts to/from this site requires atleast EconomyShopGUI v6.2.0 or EconomyShopGUI Premium v5.4.0.
-            <br>
-            Make sure you are up-to-date!
-        </div>
-        <br>
-        <br>
-        <h5><b>Uploading custom layouts</b></h5>
-        Using 4 simple steps you can upload a premade layout, for anyone to download or get inspiration from.
+        <h4 style="font-weight: 700; margin-bottom: 15px;">Uploading layouts</h4>
+        Uploading layouts is done using 4 simple steps:
         <br>
         <br>
         <ul>
             <li>
-                Use the <u>/eshop uploadLayout</u> command to start the upload process of your layout
+                Use the <a style="text-decoration: underline; color: #ff922d;">/eshop uploadLayout</a> command to start
+                the upload process of your layout
             </li>
             <li>
                 Enter a layout title, description and tags when asked in chat
             </li>
             <li>
-                Next a GUI will open where you will be asked to select the shop layouts to upload
+                Next, a GUI will open where you will be asked to select the shop layouts to upload
                 <ul>
                     <li>
-                        Optionally the config.yml can be uploaded if transaction/option items, navigation bars or display lore layout has been modified and is apart of this shop layout
+                        Optionally, the config.yml can be uploaded if transaction/option items, navigation bars or
+                        display lore layout has been modified and is apart of the custom layout
                     </li>
                 </ul>
             </li>
             <li>
-                Finally choose a upload method: <b>Discord</b> or <b>Temporarily</b>
+                Finally, choose a upload method: <b>Discord</b> or <b>Temporarily</b>
             </li>
         </ul>
         When completed the steps above, you will need to wait till your layout gets accepted by our server.
         <br>
+        Your layout will be denied or removed if it does not meet the guidelines listed on the <a href="guidelines.html"
+            style="color: #0077ff; text-decoration: none;">Guidelines</a> page.
         <br>
         <br>
-        <h5><b>Installing premade layouts</b></h5>
-        Installing premade layouts is as simple as executing 1 command
+        <h4 style="font-weight: 700; margin-bottom: 15px;">Installing premade layouts</h4>
+        Installing shop layouts can be done using 1 command:
         <br>
         <br>
         <ul>
             <li>
-                Use the <u>/eshop installLayout [layoutID]</u> command to start the install process of your layout
+                Use the <a style="text-decoration: underline; color: #ff922d;">/eshop installLayout [layoutID]</a>
+                command to start the install process of a layout
             </li>
             <ul>
                 <li>
-                    Replacing <u>[layoutID]</u> with the layout specific ID
+                    <p style="font-style: italic; margin: 0;">Replacing <a style="font-style: normal;">[layoutID]</a>
+                        with the
+                        layout specific ID</p>
                 </li>
             </ul>
             <li>
-                After the installation proceeds, the changes can be reloaded using <b>/sreload</b>(Note that we recommend a server restart for layouts using a config.yml)
+                After the installation proceeds, the changes can be reloaded using <a
+                    style="text-decoration: underline; color: #ff922d;">/sreload</a>
+                (Note that we recommend a server restart for layouts using a config.yml)
             </li>
         </ul>
+        <br>
         <div class="info">
             <img src="pics/info-250.png" class="info-img">
-            The install command can quickly be located by clicking any layout on the <a href="index.html">layouts page</a> > Get install command > Click the command to copy
+            The install command can be located by clicking any layout on the <a href="index.html"
+                style="color: #5c96d8; font-weight: 600; text-decoration: none;">layouts
+                page</a> > Get install command > Click the command to copy
         </div>
         <br>
+        <h4 style="font-weight: 700; margin-bottom: 15px;">Updating existing layouts</h4>
+        Updating existing layouts is useful for minecraft updates or simple changes/corrections in your layout<br>
         <br>
-        <h5><b>Updating existing layouts</b></h5>
-            Updating existing layouts is usefull for minecraft updates or simple changes/corrections in your layout<br>
-        <br>
+        <b style="font-size: large;margin-bottom: 15px;display: block;">Updating the files of your layout:</b>
         <ul>
             <li>
-                Use the <u>/eshop updateLayout [layoutID]</u> command to start the update process for your layout
+                Use the <a style="text-decoration: underline; color: #ff922d;">/eshop updateLayout
+                    [layoutID]</a> command to start the update process of your
+                layout
             </li>
             <ul>
                 <li>
-                    Replacing <u>[layoutID]</u> with the layout specific ID
+                    <p style="font-style: italic;">Replacing <a style="font-style: normal;">[layoutID]</a> with
+                        the layout specific ID</p>
                 </li>
             </ul>
         </ul>
+        <strong style="font-size: large;margin-bottom: 15px;display: block;">Updating the title/description:</strong>
+        <ul>
+            <li>
+                Login on the <a href="account.html" style="color: #0077ff; text-decoration: none;">My Layouts</a> page using the discord account u used while uploading the layout
+            </li>
+            <li>
+                Click one of your layouts to start editing the title/description
+            </li>
+        </ul>
+        <strong style="font-size: large;margin-bottom: 15px;display: block;">Adding screenshots to layouts</strong>
+        Similarly as updating the title/description of your layout, it is possible to upload screenshots which will help visualize the layout
+        <br>
+        <ul>
+            <li>
+                Login on the <a href="account.html" style="color: #0077ff;text-decoration: none;">My Layouts</a> page using the discord account u used while uploading the layout
+            </li>
+            <li>
+                Click the layout you want to upload screenshots for
+            </li>
+            <li>
+                You will now be able to click the <strong>Upload screenshot</strong> button
+            </li>
+        </ul>
+        <br>
         <div class="warn">
             <img src="pics/exclamation-mark.svg" class="warn-img">
-            Note that this feature is only available for layouts uploaded using Discord verification and can only be updated by the original author of the layout
+            Note that these features are only available for layouts uploaded using Discord verification and can only be
+            updated by the original author of the layout
         </div>
         <br>
-        <h5><b>Differences between upload methods:</b></h5>
-        There are two different ways for upload layouts, anonymously or using Discord authentication.
+        <h4 style="font-weight: 700; margin-bottom: 15px;">Differences between upload methods:</h4>
+        There are two different ways to upload a layout, anonymously or using Discord authentication.
         <br>
         <br>
         <ul>
             <li>
-                <b>Temporarily</b> upload makes it so you can upload layouts anonymously, but will be removed after 14 days
+                <b>Temporarily</b> upload makes it so you can upload layouts anonymously, but will be removed after 5
+                days
             </li>
             <li>
-                <b>Discord</b> authentication makes it possible to edit/remove your uploaded layouts at any later point when logged in thru discord on the <a href="account.html">My Layouts</a> page
+                <b>Discord</b> authentication makes it possible to edit/remove your uploaded layouts at any later point
+                when logged in thru discord on the <a href="account.html"
+                    style="color: #0077ff; text-decoration: none;">My Layouts</a> page
             </li>
             <ul>
                 <li>
@@ -276,6 +310,14 @@
                 </li>
             </ul>
         </ul>
+        <br>
+        <div class="disclaimer">
+            <img src="pics/verified-author.svg" class="disclaimer-img">
+            Uploading/downloading layouts to/from this site requires atleast EconomyShopGUI v6.2.0 or
+            EconomyShopGUI Premium v5.4.0.
+            <br>
+            Make sure you are up-to-date!
+        </div>
         <script type="module">
             import { API } from './api.js';
             import { NavBar } from './navbar.js';
@@ -288,13 +330,16 @@
 
     <div class="footer">
         <ul class="footerLinks">
-            <li class="footerEle"><a class="footerLink" href="https://www.spigotmc.org/resources/authors/gypopo.312524/">SpigotMC</a></li>
-            <li class="footerEle"><a class="footerLink" href="https://github.com/Gypopo/GPFileShareWebsite">Github</a></li>
+            <li class="footerEle"><a class="footerLink"
+                    href="https://www.spigotmc.org/resources/authors/gypopo.312524/">SpigotMC</a></li>
+            <li class="footerEle"><a class="footerLink" href="https://github.com/Gypopo/GPFileShareWebsite">Github</a>
+            </li>
             <li class="footerEle">
-                <p style="color: #fff;"> || &nbsp; © GPPlugins 2023 All rights reserved</p>
+                <p style="color: #fff;"> || &nbsp; © GPPlugins 2025 All rights reserved</p>
             </li>
             <li class="footerEle"><a class="footerLink" href="https://discord.gpplugins.com">Discord</a></li>
         </ul>
     </div>
 </body>
+
 </html>

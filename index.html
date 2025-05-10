@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <title>Layout marketplace</title>
+    <meta name="description" content="Sharing/downloading custom shop layouts made easy">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +17,6 @@
     <link rel="stylesheet" href="css/yaml.css">
     <link rel="stylesheet" href="css/search.css">
     <script src="yaml-syntax.js"></script>
-    <title>Share your shop files</title>
     <style>
         body {
             position: relative;
@@ -131,6 +132,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, 270px);
             grid-gap: 20px;
+            justify-content: center;
         }
 
         .overlay {
@@ -816,6 +818,19 @@
             margin-top: 10px;
         }
 
+        @media (max-width: 800px) {
+            .content {
+                display: block;
+            }
+            .sidebarBody {
+                text-align: center;
+                width: 100%;
+            }
+            .sidebarSortsContainer {
+                grid-template-columns: auto;
+            }
+        }
+
         .footerLinks {
             display: inline-grid;
             grid-auto-flow: row;
@@ -929,7 +944,7 @@
             <li class="footerEle"><a class="footerLink" href="https://github.com/Gypopo/GPFileShareWebsite">Github</a>
             </li>
             <li class="footerEle">
-                <p style="color: #fff;"> || &nbsp; © GPPlugins 2023 All rights reserved</p>
+                <p style="color: #fff;"> || &nbsp; © GPPlugins 2025 All rights reserved</p>
             </li>
             <li class="footerEle"><a class="footerLink" href="https://discord.gpplugins.com">Discord</a></li>
         </ul>
